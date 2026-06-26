@@ -8,7 +8,7 @@
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://callpreflight.app/">
   <meta property="og:title" content="Webcam Test &amp; Microphone Test Before Video Calls | Call Preflight">
-  <meta property="og:description" content="Free private webcam and microphone test before Zoom, Google Meet, Teams, interviews, and client calls. No account. No audio or video upload.">
+  <meta property="og:description" content="Free private webcam and microphone test before Zoom, Google Meet, Teams, interviews, and client calls. No account required. No audio or video upload.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://callpreflight.app/">
   <meta property="og:site_name" content="Call Preflight">
@@ -23,12 +23,25 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
+    "@type": ["SoftwareApplication", "WebApplication"],
     "name": "Call Preflight",
     "url": "https://callpreflight.app/",
     "applicationCategory": "UtilitiesApplication",
     "operatingSystem": "Web browser",
-    "description": "A free browser-based webcam and microphone test for checking your camera, mic, framing, lighting, and audio before video calls.",
+    "description": "A free browser-based webcam and microphone test for checking your camera, mic, framing, lighting, background, and audio before video calls.",
+    "isAccessibleForFree": true,
+    "featureList": [
+      "Online webcam test",
+      "Online microphone test",
+      "Camera preview",
+      "Microphone playback",
+      "2-second simulated call delay",
+      "WebRTC loopback",
+      "Device selection",
+      "Local browser processing",
+      "No account required",
+      "No audio or video upload"
+    ],
     "offers": {
       "@type": "Offer",
       "price": "0",
@@ -40,86 +53,6 @@
       "@type": "Person",
       "name": "Alex Dmowski"
     }
-  }
-  </script>
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "How can I test my webcam online?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Open Call Preflight, click Start free preflight check, choose your camera, and click Join test call. Your browser will ask for camera permission and show a delayed preview so you can check framing, lighting, and background."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "How can I test my microphone before a video call?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Click Start free preflight check, select your microphone, and join the test call. Call Preflight plays your voice back through a WebRTC loopback with a 2-second delay so you can hear how you sound to other people."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Does Call Preflight record my camera or microphone?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "No. Call Preflight does not record, store, or upload your camera or microphone streams. Audio and video are processed locally in your browser through WebRTC."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Why do I hear my voice with a delay?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Call Preflight adds a 2-second delay to simulate real video call latency. That helps you notice awkward pauses, talking over others, and how your voice actually lands for remote participants."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Can I use this before Zoom, Google Meet, or Microsoft Teams?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Yes. Call Preflight is a browser-based webcam and microphone test you can run before joining any video platform, including Zoom, Google Meet, Microsoft Teams, interviews, online classes, and client meetings."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Why can't I hear myself?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "You need to click Join test call and allow microphone access. Playback starts only after the WebRTC loopback connects. Check that the correct microphone is selected and that your browser tab is not muted."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Does this work on mobile?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Call Preflight works in modern mobile browsers that support WebRTC, camera, and microphone access. Device support varies by phone, browser, and operating system."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Is Call Preflight free?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Yes. Call Preflight is free to use with no account required."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Is my camera or microphone data uploaded anywhere?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "No audio or video is uploaded to Call Preflight servers. Media is processed locally in your browser. See the privacy policy for details about local storage and standard web hosting logs."
-        }
-      }
-    ]
   }
   </script>
 </head>
@@ -143,7 +76,7 @@
           <h1>Free webcam and microphone test before your next video call</h1>
           <p class="lead">
             Check your camera, mic, lighting, framing, and audio before Zoom, Google Meet, Teams,
-            interviews, classes, or client meetings. Private browser-based test. No account.
+            interviews, classes, or client meetings. Private browser-based test. No account required.
             No audio or video upload.
           </p>
           <button type="button" id="start-btn" class="btn btn-primary btn-lg">Start free preflight check</button>
@@ -151,7 +84,7 @@
 
         <article class="search-intent">
           <p>
-            Use Call Preflight as a free online webcam test and microphone test before joining a video call.
+            Use Call Preflight as a free online webcam test, camera test, and microphone test before joining a video call.
           </p>
           <p>It helps you check:</p>
           <ul>
@@ -204,6 +137,10 @@
             so you can catch awkward pauses, background noise, or lighting issues before you join.
           </p>
         </article>
+
+        <p class="browser-compat">
+          Works in modern WebRTC-capable browsers including Chrome, Edge, Safari, and Firefox.
+        </p>
 
         <section class="faq" aria-labelledby="faq-heading">
           <h2 id="faq-heading">Frequently asked questions</h2>

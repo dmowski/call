@@ -23,7 +23,7 @@ test.describe('Landing page SEO', () => {
     await expect(page.getByRole('heading', { level: 2, name: /how it works/i })).toBeVisible();
     await expect(page.getByRole('heading', { level: 2, name: /frequently asked questions/i })).toBeVisible();
     await expect(page.locator('.how-it-works')).toContainText(/WebRTC/i);
-    await expect(page.locator('.search-intent')).toContainText(/webcam test/i);
+    await expect(page.locator('.search-intent')).toContainText(/webcam test.*camera test.*microphone test/i);
   });
 });
 

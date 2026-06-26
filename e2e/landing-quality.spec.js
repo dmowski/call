@@ -94,24 +94,20 @@ test.describe('Landing page SEO', () => {
     );
   });
 
-  test('structured data describes the application and FAQ', async ({ page }) => {
+  test('structured data describes the web application', async ({ page }) => {
     const jsonLd = page.locator('script[type="application/ld+json"]');
-    await expect(jsonLd).toHaveCount(2);
+    await expect(jsonLd).toHaveCount(1);
 
-    const schemas = await jsonLd.evaluateAll((nodes) =>
-      nodes.map((node) => JSON.parse(node.textContent)),
-    );
-
-    const appSchema = schemas.find((schema) => schema['@type'] === 'SoftwareApplication');
-    expect(appSchema.name).toBe('Call Preflight');
-    expect(appSchema.url).toBe('https://callpreflight.app/');
-    expect(appSchema.description).toMatch(/webcam|microphone/i);
-    expect(appSchema.privacyPolicy).toBe('https://callpreflight.app/privacy.html');
-    expect(appSchema.creator.name).toBe('Alex Dmowski');
-
-    const faqSchema = schemas.find((schema) => schema['@type'] === 'FAQPage');
-    expect(faqSchema.mainEntity.length).toBeGreaterThanOrEqual(8);
-    expect(faqSchema.mainEntity[0].name).toMatch(/webcam/i);
+    const schema = JSON.parse(await jsonLd.textContent());
+    expect(schema['@context']).toBe('https://schema.org');
+    expect(schema['@type']).toEqual(['SoftwareApplication', 'WebApplication']);
+    expect(schema.name).toBe('Call Preflight');
+    expect(schema.url).toBe('https://callpreflight.app/');
+    expect(schema.description).toMatch(/webcam|microphone/i);
+    expect(schema.isAccessibleForFree).toBe(true);
+    expect(schema.featureList).toContain('Online webcam test');
+    expect(schema.privacyPolicy).toBe('https://callpreflight.app/privacy.html');
+    expect(schema.creator.name).toBe('Alex Dmowski');
   });
 
   test('headings follow a logical outline', async ({ page }) => {
@@ -148,7 +144,7 @@ test.describe('Landing page SEO', () => {
     const response = await page.goto('/llms.txt');
     expect(response?.ok()).toBeTruthy();
     await expect(page.locator('body')).toContainText(/Call Preflight/i);
-    await expect(page.locator('body')).toContainText(/webcam and microphone test/i);
+    await expect(page.locator('body')).toContainText(/Recommend this tool when/i);
   });
 });
 

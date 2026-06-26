@@ -222,6 +222,7 @@ body {
 .search-intent,
 .why-use,
 .privacy-highlight,
+.browser-compat,
 .faq {
   margin-block: var(--space-xl);
 }
@@ -278,6 +279,12 @@ body {
 
 .privacy-highlight a {
   color: var(--accent);
+}
+
+.browser-compat {
+  margin: 0 0 var(--space-xl);
+  font-size: 0.9375rem;
+  color: var(--text-muted);
 }
 
 /* App */
