@@ -48,9 +48,15 @@ test.describe('Join test call', () => {
 
     await expect(page.locator('#status')).toContainText(/delayed by 2 seconds/i, { timeout: 10_000 });
 
+    await page.waitForTimeout(3500);
+
     const audioPlaying = await page.evaluate(() => {
       const audio = document.getElementById('remote-audio');
-      return audio instanceof HTMLAudioElement && audio.srcObject instanceof MediaStream;
+      return (
+        audio instanceof HTMLAudioElement &&
+        audio.srcObject instanceof MediaStream &&
+        !audio.paused
+      );
     });
     expect(audioPlaying).toBe(true);
   });

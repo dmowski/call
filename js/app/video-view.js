@@ -1,3 +1,4 @@
+import { log } from './logger.js';
 import { dom } from './dom.js';
 
 let delayedCanvas = null;
@@ -12,12 +13,16 @@ export function ensureCanvas() {
   return delayedCanvas;
 }
 
-export function showDelayedVideo(session) {
+export async function showDelayedVideo(session) {
   dom.videoPlaceholder.classList.add('hidden');
   dom.remoteVideo.classList.add('hidden');
   const canvas = ensureCanvas();
   canvas.classList.remove('hidden');
-  session.startVideoDelay(canvas);
+  await session.startVideoDelay(canvas);
+  log('video', 'delayed canvas visible', {
+    width: canvas.width,
+    height: canvas.height,
+  });
 }
 
 export function resetVideoView() {

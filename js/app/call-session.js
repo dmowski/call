@@ -3,6 +3,7 @@ import { LoopbackSession } from '../webrtc.js';
 import { dom } from './dom.js';
 import { populateDevices, saveSelectedDevices, syncSelectsFromStream } from './devices.js';
 import { joinErrorMessage } from './media-errors.js';
+import { log } from './logger.js';
 import { setStatus } from './status.js';
 import { showDelayedVideo, resetVideoView } from './video-view.js';
 
@@ -13,10 +14,29 @@ export function isInCall() {
   return inCall;
 }
 
+export function getSessionDebugState() {
+  return session?.getDebugState?.() ?? null;
+}
+
 export function resetJoinButton() {
   inCall = false;
   dom.joinCallBtn.disabled = false;
   dom.joinCallBtn.textContent = 'Join test call';
+}
+
+async function playDelayedAudio(stream) {
+  dom.remoteAudio.srcObject = stream;
+
+  try {
+    await dom.remoteAudio.play();
+    log('audio', 'remote audio playing', {
+      paused: dom.remoteAudio.paused,
+      trackCount: stream.getAudioTracks().length,
+    });
+  } catch (err) {
+    log('audio', 'remote audio play failed', { error: err.message });
+    throw err;
+  }
 }
 
 function createSession() {
@@ -24,11 +44,10 @@ function createSession() {
 
   session = new LoopbackSession({
     onVideoReady: () => {
+      log('video', 'onVideoReady callback');
       if (inCall) showDelayedVideo(session);
     },
-    onAudioReady: (stream) => {
-      dom.remoteAudio.srcObject = stream;
-    },
+    onAudioReady: playDelayedAudio,
   });
   return session;
 }
@@ -36,12 +55,18 @@ function createSession() {
 export async function joinCall() {
   dom.joinCallBtn.disabled = true;
   setStatus('Joining test call…', 'active');
+  log('call', 'join started');
 
   let stream;
 
   try {
     stream = await requestJoinMedia();
+    log('call', 'getUserMedia succeeded', {
+      videoTracks: stream.getVideoTracks().length,
+      audioTracks: stream.getAudioTracks().length,
+    });
   } catch (err) {
+    log('call', 'getUserMedia failed', { error: err.message, name: err.name });
     resetJoinButton();
     setStatus(`Could not join: ${await joinErrorMessage(err)}`, 'error');
     return;
@@ -55,11 +80,13 @@ export async function joinCall() {
     await populateDevices({ labelsAvailable: true });
     syncSelectsFromStream(stream);
     saveSelectedDevices();
-    showDelayedVideo(session);
+    await showDelayedVideo(session);
 
     dom.joinCallBtn.textContent = 'In call';
     setStatus('In call — audio and video delayed by 2 seconds.', 'active');
+    log('call', 'join complete', session.getDebugState());
   } catch (err) {
+    log('call', 'join failed after getUserMedia', { error: err.message, name: err.name });
     stream.getTracks().forEach((track) => track.stop());
     resetJoinButton();
     leaveCall();
