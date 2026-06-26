@@ -246,17 +246,29 @@ body {
 .controls {
   display: grid;
   gap: var(--space-md);
-  margin-bottom: var(--space-xl);
-  padding: var(--space-lg);
+  margin-bottom: var(--space-lg);
+  padding: var(--space-md) var(--space-lg);
   background: var(--bg-elevated);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
 }
 
+.control-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-md);
+}
+
 .control-group {
   display: grid;
   gap: var(--space-xs);
+  min-width: 0;
+}
+
+.control-group select {
+  width: 100%;
+  min-width: 0;
 }
 
 .control-group label {
@@ -278,7 +290,11 @@ body {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-sm);
-  padding-top: var(--space-sm);
+}
+
+.control-actions .btn-primary {
+  flex: 1;
+  min-width: 12rem;
 }
 
 /* Call UI */
@@ -422,6 +438,10 @@ body {
 }
 
 @media (max-width: 480px) {
+  .control-row {
+    grid-template-columns: 1fr;
+  }
+
   .control-actions {
     flex-direction: column;
   }

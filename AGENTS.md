@@ -47,7 +47,16 @@ css/styles.css          # All styles; light/dark via [data-theme]
 js/
   app.js                # Entry point — calls initApp()
   storage.js            # localStorage (theme, devices, appStarted)
-  webrtc.js             # LoopbackSession, device enumeration
+  webrtc.js             # Public barrel — re-exports LoopbackSession, listMediaDevices
+  webrtc/
+    constants.js        # DELAY_MS
+    constraints.js      # getUserMedia constraint helpers
+    negotiation.js      # ICE, offer/answer
+    video-utils.js      # Hidden video element, dimension wait
+    video-delay.js      # VideoDelayRenderer, attachVideoStream
+    audio-delay.js      # AudioDelayPipeline
+    devices.js          # enumerateDevices wrapper
+    loopback-session.js # LoopbackSession orchestrator
   app/
     dom.js              # DOM element refs
     init.js             # Event wiring
