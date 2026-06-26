@@ -4,7 +4,7 @@ test.describe('Landing page SEO', () => {
   test('has title and meta description', async ({ page }) => {
     await page.goto('/');
 
-    await expect(page).toHaveTitle(/Call Prep/);
+    await expect(page).toHaveTitle(/Call Preflight/);
     await expect(page.locator('meta[name="description"]')).toHaveAttribute(
       'content',
       /camera.*microphone/i,
@@ -14,8 +14,8 @@ test.describe('Landing page SEO', () => {
   test('has crawlable headings and content', async ({ page }) => {
     await page.goto('/');
 
-    await expect(page.getByRole('heading', { level: 1, name: /get ready for the call/i })).toBeVisible();
-    await expect(page.getByRole('heading', { level: 2, name: /what you can do/i })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1, name: /preflight your video call/i })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 2, name: /what you can check/i })).toBeVisible();
     await expect(page.getByRole('heading', { level: 2, name: /how it works/i })).toBeVisible();
     await expect(page.locator('.how-it-works')).toContainText(/WebRTC/i);
   });
@@ -32,10 +32,10 @@ test.describe('Landing page footer', () => {
 });
 
 test.describe('Landing page navigation', () => {
-  test('Start button hides landing and shows app', async ({ page }) => {
+  test('Start preflight button hides landing and shows app', async ({ page }) => {
     await page.goto('/');
 
-    await page.getByRole('button', { name: 'Start', exact: true }).click();
+    await page.getByRole('button', { name: /start preflight/i }).click();
 
     await expect(page.locator('#landing')).toBeHidden();
     await expect(page.locator('#app')).toBeVisible();

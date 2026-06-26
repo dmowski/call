@@ -3,23 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Call Prep — Test Your Camera &amp; Mic Before Video Calls</title>
-  <meta name="description" content="Prepare for video calls by previewing your camera, testing your microphone, and hearing yourself with realistic delay — just like your call partner would. Free, private, runs in your browser.">
-  <meta name="keywords" content="video call prep, camera test, microphone test, webcam check, WebRTC, call rehearsal">
+  <title>Call Preflight — Test Your Camera &amp; Mic Before Video Calls</title>
+  <meta name="description" content="Run a free browser-based preflight check before your video call. Preview your camera, test your microphone, and hear yourself with realistic 2-second delay — private, no account required.">
+  <meta name="keywords" content="call preflight, video call test, camera test, microphone test, webcam check, WebRTC, call rehearsal">
   <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://call-prep.vercel.app/">
-  <meta property="og:title" content="Call Prep — Test Your Camera &amp; Mic Before Video Calls">
-  <meta property="og:description" content="Preview your camera and hear your voice with realistic delay before your next video call.">
+  <link rel="canonical" href="https://callpreflight.app/">
+  <meta property="og:title" content="Call Preflight — Test Your Camera &amp; Mic Before Video Calls">
+  <meta property="og:description" content="Preflight your camera and mic with realistic delay before your next video call. Free and private.">
   <meta property="og:type" content="website">
+  <meta property="og:url" content="https://callpreflight.app/">
+  <meta property="og:site_name" content="Call Preflight">
   <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Call Preflight — Test Your Camera &amp; Mic Before Video Calls">
+  <meta name="twitter:description" content="Preflight your camera and mic with realistic delay before your next video call.">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/css/styles.css">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    "name": "Call Prep",
-    "description": "A browser-based tool to test your camera and microphone before video calls, with realistic audio delay simulation via WebRTC.",
+    "name": "Call Preflight",
+    "url": "https://callpreflight.app/",
+    "description": "A browser-based preflight tool to test your camera and microphone before video calls, with realistic audio delay simulation via WebRTC.",
     "applicationCategory": "UtilityApplication",
     "operatingSystem": "Any",
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
@@ -31,7 +36,7 @@
 
   <header class="site-header">
     <div class="container header-inner">
-      <span class="logo">Call Prep</span>
+      <a href="/" class="logo">Call Preflight</a>
       <button type="button" id="theme-toggle" class="btn btn-ghost" aria-label="Toggle color theme">
         <span class="theme-icon" aria-hidden="true">◐</span>
       </button>
@@ -42,17 +47,17 @@
     <!-- Landing -->
     <section id="landing" class="landing">
       <div class="container">
-        <h1>Get ready for the call</h1>
+        <h1>Preflight your video call</h1>
         <p class="lead">
-          Test your camera and microphone before your next video meeting.
-          See yourself on screen and hear your voice with a realistic 2-second delay —
+          Run a quick preflight check before your next meeting — test your camera and microphone,
+          see yourself on screen, and hear your voice with a realistic 2-second delay,
           exactly how your call partner would experience you.
         </p>
 
         <article class="features">
-          <h2>What you can do</h2>
+          <h2>What you can check</h2>
           <ul>
-            <li><strong>Camera preview</strong> — Switch between available webcams and verify your video looks right.</li>
+            <li><strong>Camera preview</strong> — Switch between available webcams and verify framing, lighting, and background.</li>
             <li><strong>Microphone check</strong> — Hear yourself through a WebRTC loopback with 2-second delay, simulating real call latency.</li>
             <li><strong>Device memory</strong> — Your selected camera, mic, and theme are saved locally in your browser.</li>
             <li><strong>Private by design</strong> — No accounts, no analytics, no server-side processing. Everything runs in your browser.</li>
@@ -62,18 +67,18 @@
         <article class="how-it-works">
           <h2>How it works</h2>
           <p>
-            Call Prep establishes a WebRTC connection with itself, routing your camera and microphone
+            Call Preflight establishes a WebRTC connection with itself, routing your camera and microphone
             through the same path a real video call would use. Audio and video are delayed by two seconds
             so you can catch awkward pauses, background noise, or lighting issues before you join.
           </p>
         </article>
 
-        <button type="button" id="start-btn" class="btn btn-primary btn-lg">Start</button>
+        <button type="button" id="start-btn" class="btn btn-primary btn-lg">Start preflight</button>
       </div>
     </section>
 
     <!-- App -->
-    <section id="app" class="app hidden" aria-label="Call preparation tools">
+    <section id="app" class="app hidden" aria-label="Call preflight tools">
       <div class="container">
         <div class="controls">
           <div class="control-row">
@@ -115,7 +120,7 @@
 
   <footer class="site-footer">
     <div class="container footer-inner">
-      <p>&copy; 2026 Call Prep. All processing happens locally in your browser.</p>
+      <p>&copy; 2026 Call Preflight. All processing happens locally in your browser.</p>
       <nav aria-label="Footer">
         <a href="/privacy.html">Privacy Policy</a>
         <a href="/contact.html">Contact &amp; Feedback</a>

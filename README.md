@@ -1,6 +1,6 @@
-# Call Prep
+# Call Preflight
 
-Test your camera and microphone before your next video call. Call Prep runs a WebRTC loopback in your browser so you can see yourself and hear your voice with a **2-second delay** — the same latency a remote participant would experience.
+Run a quick preflight check before your next video call. Call Preflight runs a WebRTC loopback in your browser so you can see yourself and hear your voice with a **2-second delay** — the same latency a remote participant would experience.
 
 No accounts. No analytics. No server-side processing.
 
@@ -15,7 +15,7 @@ No accounts. No analytics. No server-side processing.
 
 ## How it works
 
-1. Click **Start** to open the app (no camera/mic permission yet)
+1. Click **Start preflight** to open the app (no camera/mic permission yet)
 2. Choose your camera and microphone
 3. Click **Join test call** — browser asks for permission, then starts the loopback
 4. Preview delayed video and hear delayed audio; switch devices while in call
@@ -90,7 +90,7 @@ See [privacy.html](./privacy.html) for the full policy.
 
 ## Feedback
 
-Questions or suggestions? See [contact.html](./contact.html) or email [feedback@call-prep.app](mailto:feedback@call-prep.app).
+Questions or suggestions? See [contact.html](./contact.html) or email [dmowski.alex@gmail.com](mailto:dmowski.alex@gmail.com).
 
 ## License
 

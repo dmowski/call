@@ -15,6 +15,6 @@ test.describe('Contact page', () => {
     await page.goto('/contact.html');
 
     await expect(page.getByRole('heading', { level: 1, name: /contact.*feedback/i })).toBeVisible();
-    await expect(page.getByRole('link', { name: /feedback@call-prep.app/i })).toBeVisible();
+    await expect(page.getByRole('link', { name: /dmowski\.alex@gmail\.com/i })).toBeVisible();
   });
 });

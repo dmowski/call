@@ -34,7 +34,7 @@ test.describe('Landing page accessibility', () => {
     await page.goto('/');
 
     await expect(page.getByRole('button', { name: /toggle color theme/i })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Start', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: /start preflight/i })).toBeVisible();
     await expect(page.getByRole('navigation', { name: 'Footer' })).toBeVisible();
   });
 });
@@ -57,7 +57,7 @@ test.describe('Landing page SEO', () => {
     const title = await page.title();
     expect(title.length).toBeGreaterThanOrEqual(10);
     expect(title.length).toBeLessThanOrEqual(70);
-    await expect(page).toHaveTitle(/Call Prep.*camera.*mic/i);
+    await expect(page).toHaveTitle(/Call Preflight.*camera.*mic/i);
 
     const description = page.locator('meta[name="description"]');
     await expect(description).toHaveAttribute('content', /camera.*microphone/i);
@@ -70,9 +70,17 @@ test.describe('Landing page SEO', () => {
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /index/i);
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
       'href',
-      'https://call-prep.vercel.app/',
+      'https://callpreflight.app/',
     );
-    await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content', /Call Prep/i);
+    await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content', /Call Preflight/i);
+    await expect(page.locator('meta[property="og:url"]')).toHaveAttribute(
+      'content',
+      'https://callpreflight.app/',
+    );
+    await expect(page.locator('meta[property="og:site_name"]')).toHaveAttribute(
+      'content',
+      'Call Preflight',
+    );
     await expect(page.locator('meta[property="og:description"]')).toHaveAttribute(
       'content',
       /camera|voice|call/i,
@@ -88,14 +96,15 @@ test.describe('Landing page SEO', () => {
     const schema = JSON.parse(await jsonLd.textContent());
     expect(schema['@context']).toBe('https://schema.org');
     expect(schema['@type']).toBe('WebApplication');
-    expect(schema.name).toBe('Call Prep');
+    expect(schema.name).toBe('Call Preflight');
+    expect(schema.url).toBe('https://callpreflight.app/');
     expect(schema.description).toMatch(/camera|microphone|WebRTC/i);
   });
 
   test('headings follow a logical outline', async ({ page }) => {
     await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1);
-    await expect(page.getByRole('heading', { level: 1, name: /get ready for the call/i })).toBeVisible();
-    await expect(page.getByRole('heading', { level: 2, name: /what you can do/i })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1, name: /preflight your video call/i })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 2, name: /what you can check/i })).toBeVisible();
     await expect(page.getByRole('heading', { level: 2, name: /how it works/i })).toBeVisible();
   });
 
