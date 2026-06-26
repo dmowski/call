@@ -52,6 +52,21 @@ export class LoopbackSession {
     return this.#localStream.getAudioTracks().length > 0;
   }
 
+  async join({ videoDeviceId, audioDeviceId } = {}) {
+    const constraints = {
+      video: videoDeviceId ? { deviceId: { exact: videoDeviceId } } : true,
+      audio: audioDeviceId ? { deviceId: { exact: audioDeviceId } } : true,
+    };
+    const stream = await navigator.mediaDevices.getUserMedia(constraints);
+
+    for (const track of stream.getTracks()) {
+      this.#replaceTrack(track.kind, track);
+    }
+
+    await this.#negotiate();
+    return stream;
+  }
+
   async enableVideo(deviceId) {
     const constraints = {
       video: deviceId ? { deviceId: { exact: deviceId } } : true,
@@ -244,11 +259,3 @@ export async function listMediaDevices() {
   };
 }
 
-export async function requestPermissions() {
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-    stream.getTracks().forEach((t) => t.stop());
-  } catch {
-    /* labels may stay empty until permission granted */
-  }
-}
