@@ -1,5 +1,10 @@
 export const DELAY_MS = 2000;
 
+function deviceConstraint(deviceId) {
+  if (!deviceId) return true;
+  return { deviceId: { ideal: deviceId } };
+}
+
 export class LoopbackSession {
   #delayMs;
   #pc1;
@@ -52,12 +57,11 @@ export class LoopbackSession {
     return this.#localStream.getAudioTracks().length > 0;
   }
 
-  async join({ videoDeviceId, audioDeviceId } = {}) {
-    const constraints = {
-      video: videoDeviceId ? { deviceId: { exact: videoDeviceId } } : true,
-      audio: audioDeviceId ? { deviceId: { exact: audioDeviceId } } : true,
-    };
-    const stream = await navigator.mediaDevices.getUserMedia(constraints);
+  async join() {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: true,
+      audio: true,
+    });
 
     for (const track of stream.getTracks()) {
       this.#replaceTrack(track.kind, track);
@@ -69,7 +73,7 @@ export class LoopbackSession {
 
   async enableVideo(deviceId) {
     const constraints = {
-      video: deviceId ? { deviceId: { exact: deviceId } } : true,
+      video: deviceConstraint(deviceId),
       audio: false,
     };
     const stream = await navigator.mediaDevices.getUserMedia(constraints);
@@ -82,7 +86,7 @@ export class LoopbackSession {
 
   async enableAudio(deviceId) {
     const constraints = {
-      audio: deviceId ? { deviceId: { exact: deviceId } } : true,
+      audio: deviceConstraint(deviceId),
       video: false,
     };
     const stream = await navigator.mediaDevices.getUserMedia(constraints);
@@ -97,7 +101,7 @@ export class LoopbackSession {
     if (!this.hasVideo()) return this.enableVideo(deviceId);
 
     const constraints = {
-      video: deviceId ? { deviceId: { exact: deviceId } } : true,
+      video: deviceConstraint(deviceId),
       audio: false,
     };
     const stream = await navigator.mediaDevices.getUserMedia(constraints);
@@ -121,7 +125,7 @@ export class LoopbackSession {
     if (!this.hasAudio()) return this.enableAudio(deviceId);
 
     const constraints = {
-      audio: deviceId ? { deviceId: { exact: deviceId } } : true,
+      audio: deviceConstraint(deviceId),
       video: false,
     };
     const stream = await navigator.mediaDevices.getUserMedia(constraints);
