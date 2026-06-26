@@ -1,9 +1,24 @@
-import { initTheme, toggleTheme, wasAppStarted } from '../storage.js';
+import { initTheme, toggleTheme, wasAppStarted, wasInCall } from '../storage.js';
 import { dom } from './dom.js';
 import { populateDevices } from './devices.js';
 import { joinCall, onCameraChange, onMicChange, getSessionDebugState } from './call-session.js';
 import { showApp, showLanding } from './navigation.js';
-import { exposeDebugApi } from './logger.js';
+import { exposeDebugApi, log } from './logger.js';
+
+async function restoreSession() {
+  if (wasInCall()) {
+    log('app', 'restoring in-call session');
+    showApp();
+    await populateDevices();
+    await joinCall();
+    return;
+  }
+
+  if (wasAppStarted()) {
+    showApp();
+    await populateDevices();
+  }
+}
 
 export function initApp() {
   initTheme();
@@ -19,8 +34,5 @@ export function initApp() {
   dom.cameraSelect.addEventListener('change', onCameraChange);
   dom.micSelect.addEventListener('change', onMicChange);
 
-  if (wasAppStarted()) {
-    showApp();
-    populateDevices();
-  }
+  restoreSession();
 }

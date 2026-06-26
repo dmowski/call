@@ -1,4 +1,4 @@
-import { setAppStarted } from '../storage.js';
+import { setAppStarted, setInCall } from '../storage.js';
 import { dom } from './dom.js';
 import { leaveCall, resetJoinButton } from './call-session.js';
 import { setStatus } from './status.js';
@@ -14,6 +14,7 @@ export function showLanding() {
   dom.app.classList.add('hidden');
   dom.landing.classList.remove('hidden');
   setAppStarted(false);
+  setInCall(false);
   resetJoinButton();
   setStatus('');
 }

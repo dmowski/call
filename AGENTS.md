@@ -130,7 +130,8 @@ Key: `call-prep-settings`
   "theme": "light" | "dark" | null,
   "cameraId": "",
   "micId": "",
-  "appStarted": false
+  "appStarted": false,
+  "inCall": false
 }
 ```
 

@@ -3,6 +3,7 @@ import { LoopbackSession } from '../webrtc.js';
 import { dom } from './dom.js';
 import { populateDevices, saveSelectedDevices, syncSelectsFromStream } from './devices.js';
 import { joinErrorMessage } from './media-errors.js';
+import { setInCall } from '../storage.js';
 import { log } from './logger.js';
 import { setStatus } from './status.js';
 import { showDelayedVideo, resetVideoView } from './video-view.js';
@@ -67,6 +68,7 @@ export async function joinCall() {
     });
   } catch (err) {
     log('call', 'getUserMedia failed', { error: err.message, name: err.name });
+    setInCall(false);
     resetJoinButton();
     setStatus(`Could not join: ${await joinErrorMessage(err)}`, 'error');
     return;
@@ -84,10 +86,12 @@ export async function joinCall() {
 
     dom.joinCallBtn.textContent = 'In call';
     setStatus('In call — audio and video delayed by 2 seconds.', 'active');
+    setInCall(true);
     log('call', 'join complete', session.getDebugState());
   } catch (err) {
     log('call', 'join failed after getUserMedia', { error: err.message, name: err.name });
     stream.getTracks().forEach((track) => track.stop());
+    setInCall(false);
     resetJoinButton();
     leaveCall();
     setStatus(`Could not join: ${await joinErrorMessage(err)}`, 'error');

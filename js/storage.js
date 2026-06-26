@@ -5,6 +5,7 @@ const defaults = {
   cameraId: '',
   micId: '',
   appStarted: false,
+  inCall: false,
 };
 
 export function loadSettings() {
@@ -61,4 +62,12 @@ export function setAppStarted(started) {
 
 export function wasAppStarted() {
   return loadSettings().appStarted;
+}
+
+export function setInCall(inCall) {
+  saveSettings({ inCall });
+}
+
+export function wasInCall() {
+  return loadSettings().inCall;
 }
