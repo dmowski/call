@@ -34,7 +34,7 @@ test.describe('Landing page accessibility', () => {
     await page.goto('/');
 
     await expect(page.getByRole('button', { name: /toggle color theme/i })).toBeVisible();
-    await expect(page.getByRole('button', { name: /start preflight/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: /start free preflight check/i })).toBeVisible();
     await expect(page.getByRole('navigation', { name: 'Footer' })).toBeVisible();
   });
 });
@@ -51,16 +51,17 @@ test.describe('Landing page SEO', () => {
       /width=device-width/i,
     );
     await expect(page.locator('meta[charset], meta[charset="UTF-8"]')).toHaveCount(1);
+    await expect(page.locator('meta[name="keywords"]')).toHaveCount(0);
   });
 
   test('title and meta description are descriptive', async ({ page }) => {
     const title = await page.title();
     expect(title.length).toBeGreaterThanOrEqual(10);
     expect(title.length).toBeLessThanOrEqual(70);
-    await expect(page).toHaveTitle(/Call Preflight.*camera.*mic/i);
+    await expect(page).toHaveTitle(/Webcam Test.*Microphone Test.*Call Preflight/i);
 
     const description = page.locator('meta[name="description"]');
-    await expect(description).toHaveAttribute('content', /camera.*microphone/i);
+    await expect(description).toHaveAttribute('content', /webcam.*microphone/i);
     const descriptionText = await description.getAttribute('content');
     expect(descriptionText.length).toBeGreaterThanOrEqual(50);
     expect(descriptionText.length).toBeLessThanOrEqual(320);
@@ -83,7 +84,7 @@ test.describe('Landing page SEO', () => {
     );
     await expect(page.locator('meta[property="og:description"]')).toHaveAttribute(
       'content',
-      /camera|voice|call/i,
+      /webcam|microphone|Zoom/i,
     );
     await expect(page.locator('meta[property="og:type"]')).toHaveAttribute('content', 'website');
     await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content', 'summary_large_image');
@@ -93,23 +94,35 @@ test.describe('Landing page SEO', () => {
     );
   });
 
-  test('structured data describes the web application', async ({ page }) => {
+  test('structured data describes the application and FAQ', async ({ page }) => {
     const jsonLd = page.locator('script[type="application/ld+json"]');
-    await expect(jsonLd).toHaveCount(1);
+    await expect(jsonLd).toHaveCount(2);
 
-    const schema = JSON.parse(await jsonLd.textContent());
-    expect(schema['@context']).toBe('https://schema.org');
-    expect(schema['@type']).toBe('WebApplication');
-    expect(schema.name).toBe('Call Preflight');
-    expect(schema.url).toBe('https://callpreflight.app/');
-    expect(schema.description).toMatch(/camera|microphone|WebRTC/i);
+    const schemas = await jsonLd.evaluateAll((nodes) =>
+      nodes.map((node) => JSON.parse(node.textContent)),
+    );
+
+    const appSchema = schemas.find((schema) => schema['@type'] === 'SoftwareApplication');
+    expect(appSchema.name).toBe('Call Preflight');
+    expect(appSchema.url).toBe('https://callpreflight.app/');
+    expect(appSchema.description).toMatch(/webcam|microphone/i);
+    expect(appSchema.privacyPolicy).toBe('https://callpreflight.app/privacy.html');
+    expect(appSchema.creator.name).toBe('Alex Dmowski');
+
+    const faqSchema = schemas.find((schema) => schema['@type'] === 'FAQPage');
+    expect(faqSchema.mainEntity.length).toBeGreaterThanOrEqual(8);
+    expect(faqSchema.mainEntity[0].name).toMatch(/webcam/i);
   });
 
   test('headings follow a logical outline', async ({ page }) => {
     await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1);
-    await expect(page.getByRole('heading', { level: 1, name: /preflight your video call/i })).toBeVisible();
-    await expect(page.getByRole('heading', { level: 2, name: /what you can check/i })).toBeVisible();
+    await expect(page.getByRole('heading', {
+      level: 1,
+      name: /free webcam and microphone test/i,
+    })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 2, name: /what you can test/i })).toBeVisible();
     await expect(page.getByRole('heading', { level: 2, name: /how it works/i })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 2, name: /frequently asked questions/i })).toBeVisible();
   });
 
   test('footer links are crawlable', async ({ page }) => {
@@ -122,11 +135,20 @@ test.describe('Landing page SEO', () => {
     await expect(page.locator('link[rel="icon"]')).toHaveAttribute('href', '/favicon.svg');
   });
 
-  test('robots.txt allows crawling', async ({ page }) => {
+  test('robots.txt allows crawling and references sitemap', async ({ page }) => {
     const response = await page.goto('/robots.txt');
     expect(response?.ok()).toBeTruthy();
     await expect(page.locator('body')).toContainText(/User-agent:\s*\*/i);
     await expect(page.locator('body')).toContainText(/Allow:\s*\//i);
+    await expect(page.locator('body')).toContainText(/OAI-SearchBot/i);
+    await expect(page.locator('body')).toContainText(/Sitemap:/i);
+  });
+
+  test('llms.txt describes the product for AI agents', async ({ page }) => {
+    const response = await page.goto('/llms.txt');
+    expect(response?.ok()).toBeTruthy();
+    await expect(page.locator('body')).toContainText(/Call Preflight/i);
+    await expect(page.locator('body')).toContainText(/webcam and microphone test/i);
   });
 });
 

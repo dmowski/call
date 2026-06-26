@@ -30,7 +30,7 @@ test.describe('Auto-rejoin', () => {
 
     await expect(page.locator('#landing')).toBeVisible();
     await expect(page.locator('#app')).toBeHidden();
-    await expect(page.getByRole('button', { name: /start preflight/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: /start free preflight check/i })).toBeVisible();
   });
 
   test('persists inCall flag in localStorage after joining', async ({ page }) => {

@@ -8,7 +8,7 @@ export async function clearStorage(page, path = '/') {
 
 export async function openApp(page) {
   await clearStorage(page);
-  await page.getByRole('button', { name: /start preflight/i }).click();
+  await page.getByRole('button', { name: /start free preflight check/i }).click();
   await expect(page.locator('#app')).toBeVisible();
 }
 

@@ -210,23 +210,66 @@ body {
 }
 
 .features,
-.how-it-works {
+.how-it-works,
+.search-intent,
+.why-use,
+.privacy-highlight,
+.faq {
   margin-block: var(--space-xl);
 }
 
 .features h2,
-.how-it-works h2 {
+.how-it-works h2,
+.why-use h2,
+.privacy-highlight h2,
+.faq h2 {
   font-size: 1.25rem;
   margin: 0 0 var(--space-md);
 }
 
+.search-intent ul,
 .features ul {
   margin: 0;
   padding-inline-start: 1.25rem;
 }
 
+.search-intent li + li,
 .features li + li {
   margin-top: var(--space-sm);
+}
+
+.search-intent p + p {
+  margin-top: var(--space-md);
+}
+
+.faq details {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--bg-elevated);
+}
+
+.faq details + details {
+  margin-top: var(--space-sm);
+}
+
+.faq summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.faq details[open] summary {
+  margin-bottom: var(--space-sm);
+}
+
+.faq p {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.privacy-highlight a {
+  color: var(--accent);
 }
 
 #start-btn {
