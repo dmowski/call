@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy — Call Prep</title>
+  <meta name="description" content="Call Prep privacy policy. No analytics, no server-side data collection. All media processing happens locally in your browser.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://call-prep.vercel.app/privacy.html">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="/" class="logo">Call Prep</a>
+      <button type="button" id="theme-toggle" class="btn btn-ghost" aria-label="Toggle color theme">
+        <span class="theme-icon" aria-hidden="true">◐</span>
+      </button>
+    </div>
+  </header>
+
+  <main id="main" class="page-content">
+    <div class="container">
+      <h1>Privacy Policy</h1>
+      <p><em>Last updated: June 26, 2026</em></p>
+
+      <h2>Overview</h2>
+      <p>
+        Call Prep is a browser-based utility that helps you test your camera and microphone
+        before video calls. We designed it to be private by default.
+      </p>
+
+      <h2>Data collection</h2>
+      <p>
+        Call Prep does <strong>not</strong> collect, store, or transmit any personal data to our servers.
+        There is no analytics, no tracking, and no server-side logic.
+      </p>
+
+      <h2>Local storage</h2>
+      <p>
+        Your preferences (selected camera, microphone, color theme, and whether you have started the app)
+        are saved in your browser's local storage on your device. This data never leaves your device
+        except when you explicitly grant camera/microphone access to the WebRTC engine in your browser.
+      </p>
+
+      <h2>Camera and microphone</h2>
+      <p>
+        When you enable your camera or microphone, media streams are processed entirely within your browser
+        via WebRTC. No audio or video is sent to any external server.
+      </p>
+
+      <h2>Third parties</h2>
+      <p>
+        Call Prep is hosted on Vercel for static file delivery. Vercel may log standard HTTP request
+        metadata (IP address, user agent) as part of normal web hosting. We do not use any third-party
+        analytics or advertising services.
+      </p>
+
+      <h2>Contact</h2>
+      <p>
+        Questions about this policy? Visit our <a href="/contact.html">Contact page</a>.
+      </p>
+
+      <p><a href="/" class="btn btn-ghost">← Back to home</a></p>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>&copy; 2026 Call Prep. All processing happens locally in your browser.</p>
+      <nav aria-label="Footer">
+        <a href="/privacy.html" aria-current="page">Privacy Policy</a>
+        <a href="/contact.html">Contact &amp; Feedback</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script type="module">
+    import { initTheme } from '/js/storage.js';
+    initTheme();
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+      import('/js/storage.js').then(({ toggleTheme }) => toggleTheme());
+    });
+  </script>
+</body>
+</html>

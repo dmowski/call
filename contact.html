@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact &amp; Feedback — Call Prep</title>
+  <meta name="description" content="Share feedback or report issues with Call Prep, the browser-based video call preparation tool.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://call-prep.vercel.app/contact.html">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="/" class="logo">Call Prep</a>
+      <button type="button" id="theme-toggle" class="btn btn-ghost" aria-label="Toggle color theme">
+        <span class="theme-icon" aria-hidden="true">◐</span>
+      </button>
+    </div>
+  </header>
+
+  <main id="main" class="page-content">
+    <div class="container">
+      <h1>Contact &amp; Feedback</h1>
+      <p>
+        We'd love to hear from you. Call Prep is an open tool built to help people feel confident
+        before video calls. Your feedback helps us improve.
+      </p>
+
+      <h2>How to reach us</h2>
+      <p>
+        Send feedback, bug reports, or feature requests via email:
+      </p>
+      <p>
+        <a href="mailto:feedback@call-prep.app" class="contact-email">feedback@call-prep.app</a>
+      </p>
+
+      <h2>What to include</h2>
+      <ul>
+        <li>A brief description of your feedback or issue</li>
+        <li>Your browser and operating system (e.g. Chrome on macOS)</li>
+        <li>Steps to reproduce, if reporting a bug</li>
+      </ul>
+
+      <p>
+        We read every message. Because Call Prep runs entirely in your browser with no accounts,
+        we cannot look up session data — please include any relevant details in your email.
+      </p>
+
+      <p><a href="/" class="btn btn-ghost">← Back to home</a></p>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>&copy; 2026 Call Prep. All processing happens locally in your browser.</p>
+      <nav aria-label="Footer">
+        <a href="/privacy.html">Privacy Policy</a>
+        <a href="/contact.html" aria-current="page">Contact &amp; Feedback</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script type="module">
+    import { initTheme } from '/js/storage.js';
+    initTheme();
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+      import('/js/storage.js').then(({ toggleTheme }) => toggleTheme());
+    });
+  </script>
+</body>
+</html>

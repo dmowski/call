@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Call Prep — Test Your Camera &amp; Mic Before Video Calls</title>
+  <meta name="description" content="Prepare for video calls by previewing your camera, testing your microphone, and hearing yourself with realistic delay — just like your call partner would. Free, private, runs in your browser.">
+  <meta name="keywords" content="video call prep, camera test, microphone test, webcam check, WebRTC, call rehearsal">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://call-prep.vercel.app/">
+  <meta property="og:title" content="Call Prep — Test Your Camera &amp; Mic Before Video Calls">
+  <meta property="og:description" content="Preview your camera and hear your voice with realistic delay before your next video call.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary">
+  <link rel="stylesheet" href="/css/styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Call Prep",
+    "description": "A browser-based tool to test your camera and microphone before video calls, with realistic audio delay simulation via WebRTC.",
+    "applicationCategory": "UtilityApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  }
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <span class="logo">Call Prep</span>
+      <button type="button" id="theme-toggle" class="btn btn-ghost" aria-label="Toggle color theme">
+        <span class="theme-icon" aria-hidden="true">◐</span>
+      </button>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Landing -->
+    <section id="landing" class="landing">
+      <div class="container">
+        <h1>Get ready for the call</h1>
+        <p class="lead">
+          Test your camera and microphone before your next video meeting.
+          See yourself on screen and hear your voice with a realistic 2-second delay —
+          exactly how your call partner would experience you.
+        </p>
+
+        <article class="features">
+          <h2>What you can do</h2>
+          <ul>
+            <li><strong>Camera preview</strong> — Switch between available webcams and verify your video looks right.</li>
+            <li><strong>Microphone check</strong> — Hear yourself through a WebRTC loopback with 2-second delay, simulating real call latency.</li>
+            <li><strong>Device memory</strong> — Your selected camera, mic, and theme are saved locally in your browser.</li>
+            <li><strong>Private by design</strong> — No accounts, no analytics, no server-side processing. Everything runs in your browser.</li>
+          </ul>
+        </article>
+
+        <article class="how-it-works">
+          <h2>How it works</h2>
+          <p>
+            Call Prep establishes a WebRTC connection with itself, routing your camera and microphone
+            through the same path a real video call would use. Audio and video are delayed by two seconds
+            so you can catch awkward pauses, background noise, or lighting issues before you join.
+          </p>
+        </article>
+
+        <button type="button" id="start-btn" class="btn btn-primary btn-lg">Start</button>
+      </div>
+    </section>
+
+    <!-- App -->
+    <section id="app" class="app hidden" aria-label="Call preparation tools">
+      <div class="container">
+        <div class="controls">
+          <div class="control-group">
+            <label for="camera-select">Camera</label>
+            <select id="camera-select" aria-label="Select camera">
+              <option value="">Loading cameras…</option>
+            </select>
+          </div>
+          <div class="control-group">
+            <label for="mic-select">Microphone</label>
+            <select id="mic-select" aria-label="Select microphone">
+              <option value="">Loading microphones…</option>
+            </select>
+          </div>
+          <div class="control-actions">
+            <button type="button" id="enable-camera-btn" class="btn btn-primary">Enable camera</button>
+            <button type="button" id="enable-mic-btn" class="btn btn-primary">Enable mic</button>
+          </div>
+        </div>
+
+        <div class="call-ui">
+          <div class="participant-tile" id="participant-tile">
+            <div class="video-placeholder" id="video-placeholder">
+              <span class="placeholder-icon" aria-hidden="true">📷</span>
+              <p>Camera off</p>
+            </div>
+            <video id="remote-video" class="remote-video hidden" autoplay playsinline muted aria-label="Delayed camera preview"></video>
+            <div class="participant-label">You (2s delay)</div>
+          </div>
+          <audio id="remote-audio" autoplay aria-label="Delayed microphone playback"></audio>
+          <p class="status" id="status" role="status" aria-live="polite"></p>
+        </div>
+
+        <button type="button" id="back-btn" class="btn btn-ghost">← Back to home</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>&copy; 2026 Call Prep. All processing happens locally in your browser.</p>
+      <nav aria-label="Footer">
+        <a href="/privacy.html">Privacy Policy</a>
+        <a href="/contact.html">Contact &amp; Feedback</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script type="module" src="/js/app.js"></script>
+</body>
+</html>
