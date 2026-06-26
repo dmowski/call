@@ -57,18 +57,22 @@ export class LoopbackSession {
     return this.#localStream.getAudioTracks().length > 0;
   }
 
-  async join() {
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: true,
-      audio: true,
-    });
-
+  async attachStream(stream) {
     for (const track of stream.getTracks()) {
       this.#replaceTrack(track.kind, track);
     }
 
     await this.#negotiate();
     return stream;
+  }
+
+  /** @deprecated use attachStream — kept for clarity in tests */
+  async join() {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: true,
+      audio: true,
+    });
+    return this.attachStream(stream);
   }
 
   async enableVideo(deviceId) {
@@ -256,6 +260,10 @@ export class LoopbackSession {
 }
 
 export async function listMediaDevices() {
+  if (!navigator.mediaDevices?.enumerateDevices) {
+    return { cameras: [], mics: [] };
+  }
+
   const devices = await navigator.mediaDevices.enumerateDevices();
   return {
     cameras: devices.filter((d) => d.kind === 'videoinput'),

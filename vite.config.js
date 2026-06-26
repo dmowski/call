@@ -15,6 +15,8 @@ export default defineConfig({
   },
   server: {
     port: 5173,
-    open: true,
+    open: '/',
+    // Prefer localhost — camera/mic APIs require a secure context (HTTPS or localhost).
+    host: 'localhost',
   },
 });

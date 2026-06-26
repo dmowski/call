@@ -1,6 +1,7 @@
+import { requestJoinMedia } from './media-access.js';
 import { LoopbackSession } from '../webrtc.js';
 import { dom } from './dom.js';
-import { populateDevices, saveSelectedDevices } from './devices.js';
+import { populateDevices, saveSelectedDevices, syncSelectsFromStream } from './devices.js';
 import { joinErrorMessage } from './media-errors.js';
 import { setStatus } from './status.js';
 import { showDelayedVideo, resetVideoView } from './video-view.js';
@@ -32,46 +33,37 @@ function createSession() {
   return session;
 }
 
-async function applyPreferredDevices() {
-  const cameraId = dom.cameraSelect.value;
-  const micId = dom.micSelect.value;
-
-  if (cameraId) {
-    try {
-      await session.switchVideo(cameraId);
-    } catch {
-      /* keep default device from initial join */
-    }
-  }
-  if (micId) {
-    try {
-      await session.switchAudio(micId);
-    } catch {
-      /* keep default device from initial join */
-    }
-  }
-}
-
 export async function joinCall() {
   dom.joinCallBtn.disabled = true;
   setStatus('Joining test call…', 'active');
 
+  let stream;
+
+  try {
+    stream = await requestJoinMedia();
+  } catch (err) {
+    resetJoinButton();
+    setStatus(`Could not join: ${await joinErrorMessage(err)}`, 'error');
+    return;
+  }
+
   try {
     createSession();
-    await session.join();
+    await session.attachStream(stream);
 
     inCall = true;
     await populateDevices({ labelsAvailable: true });
-    await applyPreferredDevices();
+    syncSelectsFromStream(stream);
     saveSelectedDevices();
     showDelayedVideo(session);
 
     dom.joinCallBtn.textContent = 'In call';
     setStatus('In call — audio and video delayed by 2 seconds.', 'active');
   } catch (err) {
+    stream.getTracks().forEach((track) => track.stop());
     resetJoinButton();
     leaveCall();
-    setStatus(`Could not join: ${joinErrorMessage(err)}`, 'error');
+    setStatus(`Could not join: ${await joinErrorMessage(err)}`, 'error');
   }
 }
 
