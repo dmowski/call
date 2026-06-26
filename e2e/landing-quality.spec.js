@@ -86,7 +86,11 @@ test.describe('Landing page SEO', () => {
       /camera|voice|call/i,
     );
     await expect(page.locator('meta[property="og:type"]')).toHaveAttribute('content', 'website');
-    await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content', 'summary');
+    await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content', 'summary_large_image');
+    await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
+      'content',
+      'https://callpreflight.app/og-image.svg',
+    );
   });
 
   test('structured data describes the web application', async ({ page }) => {
