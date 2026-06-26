@@ -20,15 +20,31 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
+      testIgnore: '**/landing-quality.spec.js',
       use: {
         ...devices['Desktop Chrome'],
         permissions: ['camera', 'microphone'],
       },
     },
+    {
+      name: 'quality',
+      testMatch: '**/landing-quality.spec.js',
+      use: {
+        ...devices['Desktop Chrome'],
+        baseURL: 'http://localhost:4173',
+      },
+    },
   ],
-  webServer: {
-    command: 'pnpm exec vite --host --port 5173',
-    url: 'http://localhost:5173',
-    reuseExistingServer: !process.env.CI,
-  },
+  webServer: [
+    {
+      command: 'pnpm exec vite --host --port 5173',
+      url: 'http://localhost:5173',
+      reuseExistingServer: !process.env.CI,
+    },
+    {
+      command: 'pnpm build && pnpm exec vite preview --host --port 4173',
+      url: 'http://localhost:4173',
+      reuseExistingServer: !process.env.CI,
+    },
+  ],
 });
