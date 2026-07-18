@@ -254,23 +254,26 @@
             <video id="remote-video" class="remote-video hidden" autoplay playsinline muted aria-label="Delayed camera preview"></video>
             <div class="participant-label" id="participant-label">You (3s delay)</div>
             <div class="preview-toolbar">
-              <fieldset class="delay-fieldset">
-                <legend class="visually-hidden">Preview delay</legend>
-                <div class="delay-options" id="delay-options" role="radiogroup" aria-label="Preview delay">
-                  <label class="delay-option">
-                    <input type="radio" name="delay" value="0">
-                    <span>Off</span>
-                  </label>
-                  <label class="delay-option">
-                    <input type="radio" name="delay" value="3000" checked>
-                    <span>3s</span>
-                  </label>
-                  <label class="delay-option">
-                    <input type="radio" name="delay" value="10000">
-                    <span>10s</span>
-                  </label>
-                </div>
-              </fieldset>
+              <div class="preview-toolbar-inner">
+                <fieldset class="delay-fieldset">
+                  <legend class="visually-hidden">Preview delay</legend>
+                  <div class="delay-options" id="delay-options" role="radiogroup" aria-label="Preview delay">
+                    <label class="delay-option">
+                      <input type="radio" name="delay" value="0">
+                      <span>Off</span>
+                    </label>
+                    <label class="delay-option">
+                      <input type="radio" name="delay" value="3000" checked>
+                      <span>3s</span>
+                    </label>
+                    <label class="delay-option">
+                      <input type="radio" name="delay" value="10000">
+                      <span>10s</span>
+                    </label>
+                  </div>
+                </fieldset>
+                <button type="button" id="mirror-toggle" class="toolbar-toggle" aria-pressed="false">Mirror</button>
+              </div>
             </div>
           </div>
           <audio id="remote-audio" autoplay aria-label="Delayed microphone playback"></audio>

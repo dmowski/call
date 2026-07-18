@@ -426,8 +426,14 @@ body {
   pointer-events: none;
 }
 
-.delay-fieldset {
+.preview-toolbar-inner {
   pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.delay-fieldset {
   border: none;
   margin: 0;
   padding: 0;
@@ -477,6 +483,37 @@ body {
 .delay-option:has(input:focus-visible) span {
   outline: 2px solid #fff;
   outline-offset: 1px;
+}
+
+.toolbar-toggle {
+  padding: calc(var(--space-xs) + 2px) var(--space-sm);
+  border: none;
+  border-radius: var(--radius-sm);
+  background: rgb(0 0 0 / 50%);
+  color: rgb(255 255 255 / 85%);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.toolbar-toggle:hover {
+  color: #fff;
+}
+
+.toolbar-toggle[aria-pressed='true'] {
+  background: var(--accent);
+  color: #fff;
+}
+
+.toolbar-toggle:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 1px;
+}
+
+.participant-tile.mirror-preview .delayed-canvas,
+.participant-tile.mirror-preview .remote-video {
+  transform: scaleX(-1);
 }
 
 .visually-hidden {

@@ -76,6 +76,21 @@ test.describe('Join test call', () => {
     await expect(page.locator('#status')).toContainText(/delayed by 10 seconds/i);
     await expect(page.locator('#participant-label')).toHaveText('You (10s delay)');
   });
+
+  test('mirrors preview horizontally when toggled', async ({ page }) => {
+    await expect(page.getByRole('button', { name: 'Mirror' })).toHaveAttribute('aria-pressed', 'false');
+    await expect(page.locator('#participant-tile')).not.toHaveClass(/mirror-preview/);
+
+    await page.getByRole('button', { name: 'Mirror' }).click();
+    await expect(page.getByRole('button', { name: 'Mirror' })).toHaveAttribute('aria-pressed', 'true');
+    await expect(page.locator('#participant-tile')).toHaveClass(/mirror-preview/);
+
+    const saved = await page.evaluate(() => {
+      const raw = localStorage.getItem('call-prep-settings');
+      return raw ? JSON.parse(raw) : null;
+    });
+    expect(saved?.mirrorPreview).toBe(true);
+  });
 });
 
 test.describe('Device preferences', () => {

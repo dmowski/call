@@ -9,6 +9,7 @@ const defaults = {
   appStarted: false,
   inCall: false,
   delayMs: DELAY_MS,
+  mirrorPreview: false,
 };
 
 export function loadSettings() {
@@ -82,4 +83,12 @@ export function getSavedDelayMs() {
 
 export function saveDelayMs(delayMs) {
   saveSettings({ delayMs });
+}
+
+export function getSavedMirrorPreview() {
+  return Boolean(loadSettings().mirrorPreview);
+}
+
+export function saveMirrorPreview(mirrorPreview) {
+  saveSettings({ mirrorPreview });
 }
