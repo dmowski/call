@@ -14,4 +14,6 @@ export const dom = {
   remoteAudio: $('#remote-audio'),
   statusEl: $('#status'),
   participantTile: $('#participant-tile'),
+  participantLabel: $('#participant-label'),
+  delayOptions: $('#delay-options'),
 };

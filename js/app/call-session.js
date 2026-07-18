@@ -3,16 +3,25 @@ import { LoopbackSession } from '../webrtc.js';
 import { dom } from './dom.js';
 import { populateDevices, saveSelectedDevices, syncSelectsFromStream } from './devices.js';
 import { joinErrorMessage } from './media-errors.js';
-import { setInCall } from '../storage.js';
+import { getSavedDelayMs, setInCall } from '../storage.js';
 import { log } from './logger.js';
 import { setStatus } from './status.js';
 import { showDelayedVideo, resetVideoView } from './video-view.js';
+import { inCallStatusMessage, cameraSwitchedStatusMessage } from './delay-messages.js';
 
 let session = null;
 let inCall = false;
 
 export function isInCall() {
   return inCall;
+}
+
+export function getSession() {
+  return session;
+}
+
+export function setSessionDelay(delayMs) {
+  session?.setDelay(delayMs);
 }
 
 export function getSessionDebugState() {
@@ -44,6 +53,7 @@ function createSession() {
   if (session) return session;
 
   session = new LoopbackSession({
+    delayMs: getSavedDelayMs(),
     onVideoReady: () => {
       log('video', 'onVideoReady callback');
       if (inCall) showDelayedVideo(session);
@@ -85,7 +95,7 @@ export async function joinCall() {
     await showDelayedVideo(session);
 
     dom.joinCallBtn.textContent = 'In call';
-    setStatus('In call — audio and video delayed by 2 seconds.', 'active');
+    setStatus(inCallStatusMessage(getSavedDelayMs()), 'active');
     setInCall(true);
     log('call', 'join complete', session.getDebugState());
   } catch (err) {
@@ -105,7 +115,7 @@ export async function onCameraChange() {
   try {
     setStatus('Switching camera…', 'active');
     await session.switchVideo(dom.cameraSelect.value || undefined);
-    setStatus('Camera switched — preview shows 2 second delay.', 'active');
+    setStatus(cameraSwitchedStatusMessage(getSavedDelayMs()), 'active');
   } catch (err) {
     setStatus(`Camera switch error: ${err.message}`, 'error');
   }

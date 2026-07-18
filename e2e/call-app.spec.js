@@ -39,16 +39,16 @@ test.describe('Join test call', () => {
 
     await expect(page.locator('#video-placeholder')).toBeHidden({ timeout: 10_000 });
     await expect(page.locator('.delayed-canvas')).toBeVisible({ timeout: 10_000 });
-    await expect(page.locator('#status')).toContainText(/delayed by 2 seconds/i);
+    await expect(page.locator('#status')).toContainText(/delayed by 3 seconds/i);
     await expect(page.getByRole('button', { name: /^in call$/i })).toBeDisabled();
   });
 
   test('activates delayed audio playback', async ({ page }) => {
     await page.getByRole('button', { name: /join test call/i }).click();
 
-    await expect(page.locator('#status')).toContainText(/delayed by 2 seconds/i, { timeout: 10_000 });
+    await expect(page.locator('#status')).toContainText(/delayed by 3 seconds/i, { timeout: 10_000 });
 
-    await page.waitForTimeout(3500);
+    await page.waitForTimeout(4500);
 
     const audioPlaying = await page.evaluate(() => {
       const audio = document.getElementById('remote-audio');
@@ -59,6 +59,22 @@ test.describe('Join test call', () => {
       );
     });
     expect(audioPlaying).toBe(true);
+  });
+
+  test('shows delay toolbar on preview and updates status', async ({ page }) => {
+    await expect(page.getByRole('radiogroup', { name: /preview delay/i })).toBeVisible();
+    await expect(page.getByRole('radio', { name: '3s' })).toBeChecked();
+
+    await page.getByRole('button', { name: /join test call/i }).click();
+    await expect(page.locator('#status')).toContainText(/delayed by 3 seconds/i, { timeout: 10_000 });
+
+    await page.locator('label.delay-option', { hasText: 'Off' }).click();
+    await expect(page.locator('#status')).toContainText(/live preview, no delay/i);
+    await expect(page.locator('#participant-label')).toHaveText('You (live)');
+
+    await page.locator('label.delay-option', { hasText: '10s' }).click();
+    await expect(page.locator('#status')).toContainText(/delayed by 10 seconds/i);
+    await expect(page.locator('#participant-label')).toHaveText('You (10s delay)');
   });
 });
 

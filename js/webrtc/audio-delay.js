@@ -1,5 +1,5 @@
 import { log } from '../app/logger.js';
-import { DELAY_MS } from './constants.js';
+import { DELAY_MS, MAX_DELAY_MS } from './constants.js';
 
 export class AudioDelayPipeline {
   #delayMs;
@@ -8,6 +8,13 @@ export class AudioDelayPipeline {
 
   constructor(delayMs = DELAY_MS) {
     this.#delayMs = delayMs;
+  }
+
+  setDelay(delayMs) {
+    this.#delayMs = delayMs;
+    if (this.#delayNode) {
+      this.#delayNode.delayTime.value = this.#delayMs / 1000;
+    }
   }
 
   get contextState() {
@@ -23,7 +30,7 @@ export class AudioDelayPipeline {
       await this.#audioContext.resume();
     }
 
-    const maxDelay = Math.max(5, this.#delayMs / 1000 + 0.5);
+    const maxDelay = MAX_DELAY_MS / 1000 + 0.5;
     this.#delayNode = this.#audioContext.createDelay(maxDelay);
     this.#delayNode.delayTime.value = this.#delayMs / 1000;
 

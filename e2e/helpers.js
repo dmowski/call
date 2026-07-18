@@ -14,11 +14,11 @@ export async function openApp(page) {
 
 export async function joinTestCall(page) {
   await page.getByRole('button', { name: /join test call/i }).click();
-  await expect(page.locator('#status')).toContainText(/delayed by 2 seconds/i, { timeout: 15_000 });
+  await expect(page.locator('#status')).toContainText(/delayed by 3 seconds/i, { timeout: 15_000 });
 }
 
-/** Wait for 2s delay buffer plus render frames. */
-export async function waitForDelayedMedia(page, ms = 3500) {
+/** Wait for delay buffer plus render frames. */
+export async function waitForDelayedMedia(page, ms = 4500) {
   await page.waitForTimeout(ms);
 }
 

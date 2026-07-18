@@ -1,11 +1,14 @@
 const STORAGE_KEY = 'call-prep-settings';
 
+import { DELAY_MS } from './webrtc/constants.js';
+
 const defaults = {
   theme: null,
   cameraId: '',
   micId: '',
   appStarted: false,
   inCall: false,
+  delayMs: DELAY_MS,
 };
 
 export function loadSettings() {
@@ -70,4 +73,13 @@ export function setInCall(inCall) {
 
 export function wasInCall() {
   return loadSettings().inCall;
+}
+
+export function getSavedDelayMs() {
+  const { delayMs } = loadSettings();
+  return typeof delayMs === 'number' && delayMs >= 0 ? delayMs : DELAY_MS;
+}
+
+export function saveDelayMs(delayMs) {
+  saveSettings({ delayMs });
 }

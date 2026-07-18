@@ -194,6 +194,17 @@ export class LoopbackSession {
     return this.#videoDelay.start(canvas);
   }
 
+  setDelay(delayMs) {
+    this.#delayMs = delayMs;
+    this.#videoDelay.setDelay(delayMs);
+    this.#audioDelay.setDelay(delayMs);
+    log('webrtc', 'delay updated', { delayMs });
+  }
+
+  get delayMs() {
+    return this.#delayMs;
+  }
+
   stop() {
     log('webrtc', 'session stopped');
     this.#videoDelay.stop();

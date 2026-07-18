@@ -14,7 +14,7 @@ test.describe('Auto-rejoin', () => {
     await page.reload();
 
     await expect(page.locator('#app')).toBeVisible();
-    await expect(page.locator('#status')).toContainText(/delayed by 2 seconds/i, { timeout: 15_000 });
+    await expect(page.locator('#status')).toContainText(/delayed by 3 seconds/i, { timeout: 15_000 });
     await expect(page.getByRole('button', { name: /^in call$/i })).toBeDisabled();
 
     await waitForDelayedMedia(page);

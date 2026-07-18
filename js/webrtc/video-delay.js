@@ -13,6 +13,11 @@ export class VideoDelayRenderer {
     this.#delayMs = delayMs;
   }
 
+  setDelay(delayMs) {
+    this.#delayMs = delayMs;
+    this.#frameBuffer = [];
+  }
+
   get framesDrawn() {
     return this.#framesDrawn;
   }

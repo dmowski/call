@@ -2,6 +2,7 @@ import { initTheme, toggleTheme, wasAppStarted, wasInCall } from '../storage.js'
 import { dom } from './dom.js';
 import { populateDevices } from './devices.js';
 import { joinCall, onCameraChange, onMicChange, getSessionDebugState } from './call-session.js';
+import { initDelayControl } from './delay-control.js';
 import { showApp, showLanding } from './navigation.js';
 import { exposeDebugApi, log } from './logger.js';
 
@@ -34,5 +35,6 @@ export function initApp() {
   dom.cameraSelect.addEventListener('change', onCameraChange);
   dom.micSelect.addEventListener('change', onMicChange);
 
+  initDelayControl();
   restoreSession();
 }
