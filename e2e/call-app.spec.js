@@ -75,6 +75,10 @@ test.describe('Join test call', () => {
     await page.locator('label.delay-option', { hasText: '10s' }).click();
     await expect(page.locator('#status')).toContainText(/delayed by 10 seconds/i);
     await expect(page.locator('#participant-label')).toHaveText('You (10s delay)');
+
+    await page.locator('label.delay-option', { hasText: '60s' }).click();
+    await expect(page.locator('#status')).toContainText(/delayed by 60 seconds/i);
+    await expect(page.locator('#participant-label')).toHaveText('You (60s delay)');
   });
 
   test('mirrors preview horizontally when toggled', async ({ page }) => {
