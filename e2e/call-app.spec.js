@@ -114,4 +114,32 @@ test.describe('Device preferences', () => {
       expect(saved?.cameraId).toBe(secondValue);
     }
   });
+
+  test('microphone selection persists in localStorage and after join', async ({ page }) => {
+    const micSelect = page.getByLabel('Select microphone');
+    const options = micSelect.locator('option');
+    const count = await options.count();
+
+    if (count <= 1) return;
+
+    const secondValue = await options.nth(1).getAttribute('value');
+    await micSelect.selectOption(secondValue ?? '');
+
+    const savedBeforeJoin = await page.evaluate(() => {
+      const raw = localStorage.getItem('call-prep-settings');
+      return raw ? JSON.parse(raw) : null;
+    });
+    expect(savedBeforeJoin?.micId).toBe(secondValue);
+
+    await page.getByRole('button', { name: /join test call/i }).click();
+    await expect(page.locator('#status')).toContainText(/delayed by 3 seconds/i, { timeout: 15_000 });
+
+    await expect(micSelect).toHaveValue(secondValue ?? '');
+
+    const savedAfterJoin = await page.evaluate(() => {
+      const raw = localStorage.getItem('call-prep-settings');
+      return raw ? JSON.parse(raw) : null;
+    });
+    expect(savedAfterJoin?.micId).toBe(secondValue);
+  });
 });

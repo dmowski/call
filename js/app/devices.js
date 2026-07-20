@@ -56,27 +56,39 @@ export async function populateDevices({ labelsAvailable = false } = {}) {
   }
 }
 
+function syncSelectFromTrack(select, track) {
+  if (!track) return;
+
+  const deviceId = track.getSettings().deviceId;
+  if (!deviceId) return;
+  if (![...select.options].some((o) => o.value === deviceId)) return;
+
+  // Some browsers (and Playwright fake devices) report "default" while enumerateDevices lists concrete ids.
+  if (deviceId === 'default' && select.value && select.value !== 'default') return;
+
+  select.value = deviceId;
+}
+
 export function syncSelectsFromStream(stream) {
-  const videoTrack = stream.getVideoTracks()[0];
-  const audioTrack = stream.getAudioTracks()[0];
-
-  if (videoTrack) {
-    const deviceId = videoTrack.getSettings().deviceId;
-    if (deviceId && [...dom.cameraSelect.options].some((o) => o.value === deviceId)) {
-      dom.cameraSelect.value = deviceId;
-    }
-  }
-
-  if (audioTrack) {
-    const deviceId = audioTrack.getSettings().deviceId;
-    if (deviceId && [...dom.micSelect.options].some((o) => o.value === deviceId)) {
-      dom.micSelect.value = deviceId;
-    }
-  }
-
+  syncSelectFromTrack(dom.cameraSelect, stream.getVideoTracks()[0]);
+  syncSelectFromTrack(dom.micSelect, stream.getAudioTracks()[0]);
   saveSelectedDevices();
 }
 
 export function saveSelectedDevices() {
   saveDeviceIds(dom.cameraSelect.value, dom.micSelect.value);
+}
+
+export function restoreMicSelection(deviceId) {
+  if (deviceId && [...dom.micSelect.options].some((o) => o.value === deviceId)) {
+    dom.micSelect.value = deviceId;
+  }
+  saveSelectedDevices();
+}
+
+export function restoreCameraSelection(deviceId) {
+  if (deviceId && [...dom.cameraSelect.options].some((o) => o.value === deviceId)) {
+    dom.cameraSelect.value = deviceId;
+  }
+  saveSelectedDevices();
 }

@@ -111,7 +111,9 @@ export class LoopbackSession {
   async switchVideo(deviceId) {
     if (!this.hasVideo()) return this.#addVideo(deviceId);
 
-    const stream = await navigator.mediaDevices.getUserMedia(videoOnlyConstraint(deviceId));
+    const stream = await navigator.mediaDevices.getUserMedia(
+      videoOnlyConstraint(deviceId, { strict: true }),
+    );
     const [newTrack] = stream.getVideoTracks();
     const sender = this.#pc1.getSenders().find((s) => s.track?.kind === 'video');
 
@@ -128,7 +130,9 @@ export class LoopbackSession {
   async switchAudio(deviceId) {
     if (!this.hasAudio()) return this.#addAudio(deviceId);
 
-    const stream = await navigator.mediaDevices.getUserMedia(audioOnlyConstraint(deviceId));
+    const stream = await navigator.mediaDevices.getUserMedia(
+      audioOnlyConstraint(deviceId, { strict: true }),
+    );
     const [newTrack] = stream.getAudioTracks();
     const sender = this.#pc1.getSenders().find((s) => s.track?.kind === 'audio');
 
@@ -143,7 +147,9 @@ export class LoopbackSession {
   }
 
   async #addVideo(deviceId) {
-    const stream = await navigator.mediaDevices.getUserMedia(videoOnlyConstraint(deviceId));
+    const stream = await navigator.mediaDevices.getUserMedia(
+      videoOnlyConstraint(deviceId, { strict: true }),
+    );
     const [track] = stream.getVideoTracks();
     this.#replaceTrack('video', track);
     await this.#negotiate();
@@ -151,7 +157,9 @@ export class LoopbackSession {
   }
 
   async #addAudio(deviceId) {
-    const stream = await navigator.mediaDevices.getUserMedia(audioOnlyConstraint(deviceId));
+    const stream = await navigator.mediaDevices.getUserMedia(
+      audioOnlyConstraint(deviceId, { strict: true }),
+    );
     const [track] = stream.getAudioTracks();
     this.#replaceTrack('audio', track);
     await this.#negotiate();

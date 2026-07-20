@@ -1,9 +1,15 @@
 import { requestJoinMedia } from './media-access.js';
 import { LoopbackSession } from '../webrtc.js';
 import { dom } from './dom.js';
-import { populateDevices, saveSelectedDevices, syncSelectsFromStream } from './devices.js';
+import {
+  populateDevices,
+  restoreCameraSelection,
+  restoreMicSelection,
+  saveSelectedDevices,
+  syncSelectsFromStream,
+} from './devices.js';
 import { joinErrorMessage } from './media-errors.js';
-import { getSavedDelayMs, setInCall } from '../storage.js';
+import { getSavedDelayMs, getSavedDeviceIds, setInCall } from '../storage.js';
 import { log } from './logger.js';
 import { setStatus } from './status.js';
 import { showDelayedVideo, resetVideoView } from './video-view.js';
@@ -70,8 +76,14 @@ export async function joinCall() {
 
   let stream;
 
+  saveSelectedDevices();
+  const { cameraId, micId } = getSavedDeviceIds();
+
   try {
-    stream = await requestJoinMedia();
+    stream = await requestJoinMedia({
+      videoDeviceId: cameraId || undefined,
+      audioDeviceId: micId || undefined,
+    });
     log('call', 'getUserMedia succeeded', {
       videoTracks: stream.getVideoTracks().length,
       audioTracks: stream.getAudioTracks().length,
@@ -112,11 +124,15 @@ export async function onCameraChange() {
   saveSelectedDevices();
   if (!inCall || !session) return;
 
+  const previousDeviceId = session.localStream.getVideoTracks()[0]?.getSettings().deviceId;
+
   try {
     setStatus('Switching camera…', 'active');
     await session.switchVideo(dom.cameraSelect.value || undefined);
+    syncSelectsFromStream(session.localStream);
     setStatus(cameraSwitchedStatusMessage(getSavedDelayMs()), 'active');
   } catch (err) {
+    restoreCameraSelection(previousDeviceId);
     setStatus(`Camera switch error: ${err.message}`, 'error');
   }
 }
@@ -125,11 +141,15 @@ export async function onMicChange() {
   saveSelectedDevices();
   if (!inCall || !session) return;
 
+  const previousDeviceId = session.localStream.getAudioTracks()[0]?.getSettings().deviceId;
+
   try {
     setStatus('Switching microphone…', 'active');
     await session.switchAudio(dom.micSelect.value || undefined);
+    syncSelectsFromStream(session.localStream);
     setStatus('Microphone switched.', 'active');
   } catch (err) {
+    restoreMicSelection(previousDeviceId);
     setStatus(`Mic switch error: ${err.message}`, 'error');
   }
 }
