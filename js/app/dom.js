@@ -9,6 +9,7 @@ export const dom = {
   cameraSelect: $('#camera-select'),
   micSelect: $('#mic-select'),
   joinCallBtn: $('#join-call-btn'),
+  noiseCancellationToggle: $('#noise-cancellation-toggle'),
   videoPlaceholder: $('#video-placeholder'),
   remoteVideo: $('#remote-video'),
   remoteAudio: $('#remote-audio'),

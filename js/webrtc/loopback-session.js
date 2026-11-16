@@ -21,9 +21,11 @@ export class LoopbackSession {
   #onVideoReady;
   #onAudioReady;
   #negotiating = false;
+  #noiseCancellation = true;
 
-  constructor({ delayMs = DELAY_MS, onVideoReady, onAudioReady } = {}) {
+  constructor({ delayMs = DELAY_MS, noiseCancellation = true, onVideoReady, onAudioReady } = {}) {
     this.#delayMs = delayMs;
+    this.#noiseCancellation = noiseCancellation;
     this.#onVideoReady = onVideoReady;
     this.#onAudioReady = onAudioReady;
     this.#localStream = new MediaStream();
@@ -91,6 +93,8 @@ export class LoopbackSession {
         iceConnectionState: this.#pc2.iceConnectionState,
       },
       audioContextState: this.#audioDelay.contextState,
+      noiseCancellation: this.#noiseCancellation,
+      audioTrackSettings: this.#localStream.getAudioTracks()[0]?.getSettings() ?? null,
     };
   }
 
@@ -131,7 +135,10 @@ export class LoopbackSession {
     if (!this.hasAudio()) return this.#addAudio(deviceId);
 
     const stream = await navigator.mediaDevices.getUserMedia(
-      audioOnlyConstraint(deviceId, { strict: true }),
+      audioOnlyConstraint(deviceId, {
+        strict: true,
+        noiseCancellation: this.#noiseCancellation,
+      }),
     );
     const [newTrack] = stream.getAudioTracks();
     const sender = this.#pc1.getSenders().find((s) => s.track?.kind === 'audio');
@@ -158,7 +165,10 @@ export class LoopbackSession {
 
   async #addAudio(deviceId) {
     const stream = await navigator.mediaDevices.getUserMedia(
-      audioOnlyConstraint(deviceId, { strict: true }),
+      audioOnlyConstraint(deviceId, {
+        strict: true,
+        noiseCancellation: this.#noiseCancellation,
+      }),
     );
     const [track] = stream.getAudioTracks();
     this.#replaceTrack('audio', track);
@@ -211,6 +221,24 @@ export class LoopbackSession {
 
   get delayMs() {
     return this.#delayMs;
+  }
+
+  async setNoiseCancellation(enabled) {
+    this.#noiseCancellation = enabled;
+    const track = this.#localStream.getAudioTracks()[0];
+    if (!track) {
+      log('webrtc', 'noise cancellation preference saved (no audio track yet)', { enabled });
+      return;
+    }
+
+    await track.applyConstraints({
+      noiseSuppression: enabled,
+      echoCancellation: enabled,
+    });
+    log('webrtc', 'noise cancellation updated', {
+      enabled,
+      settings: track.getSettings(),
+    });
   }
 
   stop() {

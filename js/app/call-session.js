@@ -9,7 +9,12 @@ import {
   syncSelectsFromStream,
 } from './devices.js';
 import { joinErrorMessage } from './media-errors.js';
-import { getSavedDelayMs, getSavedDeviceIds, setInCall } from '../storage.js';
+import {
+  getSavedDelayMs,
+  getSavedDeviceIds,
+  getSavedNoiseCancellation,
+  setInCall,
+} from '../storage.js';
 import { log } from './logger.js';
 import { setStatus } from './status.js';
 import { showDelayedVideo, resetVideoView } from './video-view.js';
@@ -60,6 +65,7 @@ function createSession() {
 
   session = new LoopbackSession({
     delayMs: getSavedDelayMs(),
+    noiseCancellation: getSavedNoiseCancellation(),
     onVideoReady: () => {
       log('video', 'onVideoReady callback');
       if (inCall) showDelayedVideo(session);
@@ -83,6 +89,7 @@ export async function joinCall() {
     stream = await requestJoinMedia({
       videoDeviceId: cameraId || undefined,
       audioDeviceId: micId || undefined,
+      noiseCancellation: getSavedNoiseCancellation(),
     });
     log('call', 'getUserMedia succeeded', {
       videoTracks: stream.getVideoTracks().length,
@@ -134,6 +141,17 @@ export async function onCameraChange() {
   } catch (err) {
     restoreCameraSelection(previousDeviceId);
     setStatus(`Camera switch error: ${err.message}`, 'error');
+  }
+}
+
+export async function setNoiseCancellation(enabled) {
+  if (session) {
+    try {
+      await session.setNoiseCancellation(enabled);
+    } catch (err) {
+      log('call', 'noise cancellation apply failed', { error: err.message });
+      throw err;
+    }
   }
 }
 

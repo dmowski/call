@@ -1,4 +1,9 @@
-import { audioOnlyConstraint, deviceConstraint, videoOnlyConstraint } from '../webrtc/constraints.js';
+import {
+  audioOnlyConstraint,
+  buildAudioConstraint,
+  deviceConstraint,
+  videoOnlyConstraint,
+} from '../webrtc/constraints.js';
 
 export function assertMediaEnvironment() {
   if (!window.isSecureContext) {
@@ -25,12 +30,19 @@ async function collectTrack(getStream) {
   }
 }
 
-export async function requestJoinMedia({ videoDeviceId, audioDeviceId } = {}) {
+export async function requestJoinMedia({
+  videoDeviceId,
+  audioDeviceId,
+  noiseCancellation = true,
+} = {}) {
   assertMediaEnvironment();
 
   const combined = {
     video: deviceConstraint(videoDeviceId, { strict: Boolean(videoDeviceId) }),
-    audio: deviceConstraint(audioDeviceId, { strict: Boolean(audioDeviceId) }),
+    audio: buildAudioConstraint(audioDeviceId, {
+      strict: Boolean(audioDeviceId),
+      noiseCancellation,
+    }),
   };
 
   try {
@@ -48,7 +60,10 @@ export async function requestJoinMedia({ videoDeviceId, audioDeviceId } = {}) {
       )),
       ...(await collectTrack(() =>
         navigator.mediaDevices.getUserMedia(
-          audioOnlyConstraint(audioDeviceId, { strict: Boolean(audioDeviceId) }),
+          audioOnlyConstraint(audioDeviceId, {
+            strict: Boolean(audioDeviceId),
+            noiseCancellation,
+          }),
         ),
       )),
     ];

@@ -81,6 +81,30 @@ test.describe('Join test call', () => {
     await expect(page.locator('#participant-label')).toHaveText('You (60s delay)');
   });
 
+  test('toggles noise cancellation and applies while in call', async ({ page }) => {
+    const toggle = page.getByRole('checkbox', { name: /noise cancellation/i });
+    await expect(toggle).toBeChecked();
+
+    await toggle.uncheck();
+    const savedOff = await page.evaluate(() => {
+      const raw = localStorage.getItem('call-prep-settings');
+      return raw ? JSON.parse(raw) : null;
+    });
+    expect(savedOff?.noiseCancellation).toBe(false);
+
+    await page.getByRole('button', { name: /join test call/i }).click();
+    await expect(page.locator('#status')).toContainText(/delayed by 3 seconds/i, { timeout: 10_000 });
+
+    const stateOff = await page.evaluate(() => window.__callPrepDebug?.().state);
+    expect(stateOff?.noiseCancellation).toBe(false);
+
+    await toggle.check();
+    await expect(page.locator('#status')).toContainText(/noise cancellation on/i);
+
+    const stateOn = await page.evaluate(() => window.__callPrepDebug?.().state);
+    expect(stateOn?.noiseCancellation).toBe(true);
+  });
+
   test('mirrors preview horizontally when toggled', async ({ page }) => {
     await expect(page.getByRole('button', { name: 'Mirror' })).toHaveAttribute('aria-pressed', 'false');
     await expect(page.locator('#participant-tile')).not.toHaveClass(/mirror-preview/);

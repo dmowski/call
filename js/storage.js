@@ -10,6 +10,7 @@ const defaults = {
   inCall: false,
   delayMs: DELAY_MS,
   mirrorPreview: false,
+  noiseCancellation: true,
 };
 
 export function loadSettings() {
@@ -91,4 +92,13 @@ export function getSavedMirrorPreview() {
 
 export function saveMirrorPreview(mirrorPreview) {
   saveSettings({ mirrorPreview });
+}
+
+export function getSavedNoiseCancellation() {
+  const { noiseCancellation } = loadSettings();
+  return noiseCancellation !== false;
+}
+
+export function saveNoiseCancellation(noiseCancellation) {
+  saveSettings({ noiseCancellation });
 }
