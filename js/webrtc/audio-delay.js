@@ -5,6 +5,7 @@ export class AudioDelayPipeline {
   #delayMs;
   #audioContext = null;
   #delayNode = null;
+  #analyser = null;
 
   constructor(delayMs = DELAY_MS) {
     this.#delayMs = delayMs;
@@ -19,6 +20,10 @@ export class AudioDelayPipeline {
 
   get contextState() {
     return this.#audioContext?.state ?? null;
+  }
+
+  get analyser() {
+    return this.#analyser;
   }
 
   async process(stream, onReady) {
@@ -37,8 +42,12 @@ export class AudioDelayPipeline {
     const source = this.#audioContext.createMediaStreamSource(stream);
     const destination = this.#audioContext.createMediaStreamDestination();
 
+    this.#analyser = this.#audioContext.createAnalyser();
+    this.#analyser.fftSize = 1024;
+
     source.connect(this.#delayNode);
     this.#delayNode.connect(destination);
+    this.#delayNode.connect(this.#analyser);
 
     log('audio', 'delay pipeline ready', {
       audioContextState: this.#audioContext.state,
@@ -53,6 +62,7 @@ export class AudioDelayPipeline {
       this.#audioContext.close();
       this.#audioContext = null;
       this.#delayNode = null;
+      this.#analyser = null;
     }
   }
 }

@@ -12,9 +12,7 @@ const PEAK_HOLD_MS = 1200;
 const PEAK_RELEASE_DB_PER_SEC = 15;
 const READOUT_INTERVAL_MS = 100;
 
-let audioContext = null;
-let analyser = null;
-let source = null;
+let getAnalyser = null;
 let samples = null;
 let frameId = null;
 let level = MIN_DB;
@@ -94,6 +92,9 @@ function updateReadout(now, force = false) {
 }
 
 function measureDb() {
+  const analyser = getAnalyser?.();
+  if (!analyser) return MIN_DB;
+  if (samples?.length !== analyser.fftSize) samples = new Float32Array(analyser.fftSize);
   analyser.getFloatTimeDomainData(samples);
   let sum = 0;
   for (const s of samples) sum += s * s;
@@ -120,12 +121,6 @@ function tick(now) {
   frameId = requestAnimationFrame(tick);
 }
 
-function resumeOnGesture() {
-  const resume = () => audioContext?.resume();
-  document.addEventListener('pointerdown', resume, { once: true });
-  document.addEventListener('keydown', resume, { once: true });
-}
-
 function resetLevels() {
   level = MIN_DB;
   peak = MIN_DB;
@@ -135,35 +130,18 @@ function resetLevels() {
 export function stopAudioMeter() {
   if (frameId) cancelAnimationFrame(frameId);
   frameId = null;
-  source?.disconnect();
-  source = null;
-  analyser = null;
-  audioContext?.close();
-  audioContext = null;
+  getAnalyser = null;
   resetLevels();
   draw();
   updateReadout(0, true);
   dom.audioMeterValue.textContent = '—';
 }
 
-export async function startAudioMeter(stream) {
-  const [track] = stream.getAudioTracks();
-  stopAudioMeter();
-  if (!track) return;
-
-  audioContext = new AudioContext();
-  analyser = audioContext.createAnalyser();
-  analyser.fftSize = 1024;
-  samples = new Float32Array(analyser.fftSize);
-  source = audioContext.createMediaStreamSource(new MediaStream([track]));
-  source.connect(analyser);
-
-  if (audioContext.state === 'suspended') {
-    await audioContext.resume().catch(() => {});
-    if (audioContext.state === 'suspended') resumeOnGesture();
-  }
-
-  log('audio', 'level meter started', { trackId: track.id, contextState: audioContext.state });
+export function startAudioMeter(analyserSource) {
+  if (frameId) cancelAnimationFrame(frameId);
+  resetLevels();
+  getAnalyser = analyserSource;
+  log('audio', 'level meter started (delayed output)');
   frameId = requestAnimationFrame(tick);
 }
 

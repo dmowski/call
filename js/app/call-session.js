@@ -116,7 +116,7 @@ export async function joinCall() {
     syncSelectsFromStream(stream);
     saveSelectedDevices();
     await showDelayedVideo(session);
-    await startAudioMeter(session.localStream);
+    startAudioMeter(() => session?.delayedAudioAnalyser ?? null);
 
     dom.joinCallBtn.textContent = 'In call';
     setStatus(inCallStatusMessage(getSavedDelayMs()), 'active');
@@ -180,7 +180,6 @@ export async function onMicChange() {
   try {
     setStatus('Switching microphone…', 'active');
     await session.switchAudio(dom.micSelect.value || undefined);
-    await startAudioMeter(session.localStream);
     syncSelectsFromStream(session.localStream);
     setStatus('Microphone switched.', 'active');
   } catch (err) {

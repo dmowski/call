@@ -77,6 +77,10 @@ export class LoopbackSession {
     return this.#localStream;
   }
 
+  get delayedAudioAnalyser() {
+    return this.#audioDelay.analyser;
+  }
+
   hasVideo() {
     return this.#localStream.getVideoTracks().length > 0;
   }
