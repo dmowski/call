@@ -227,6 +227,7 @@
       <div class="container">
         <div class="app-topbar">
           <button type="button" id="back-btn" class="btn-link">← Back to home</button>
+          <button type="button" id="app-theme-toggle" class="btn-link" aria-label="Toggle color theme">◐</button>
         </div>
 
         <div class="call-panel">
@@ -252,6 +253,12 @@
               <p>Join test call to preview</p>
             </div>
             <video id="remote-video" class="remote-video hidden" autoplay playsinline muted aria-label="Delayed camera preview"></video>
+          </div>
+
+          <div class="audio-meter" id="audio-meter" role="meter" aria-label="Microphone level" aria-valuemin="-60" aria-valuemax="0" aria-valuenow="-60" data-zone="ok">
+            <span class="setting-label" aria-hidden="true">Mic</span>
+            <canvas class="audio-meter-canvas" id="audio-meter-canvas" aria-hidden="true"></canvas>
+            <span class="audio-meter-readout" aria-hidden="true"><span id="audio-meter-value">—</span> dB</span>
           </div>
 
           <div class="settings-bar">

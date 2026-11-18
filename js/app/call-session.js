@@ -19,6 +19,7 @@ import {
 import { log } from './logger.js';
 import { setStatus } from './status.js';
 import { showDelayedVideo, resetVideoView } from './video-view.js';
+import { startAudioMeter, stopAudioMeter } from './audio-meter.js';
 import { inCallStatusMessage, cameraSwitchedStatusMessage } from './delay-messages.js';
 
 let session = null;
@@ -115,6 +116,7 @@ export async function joinCall() {
     syncSelectsFromStream(stream);
     saveSelectedDevices();
     await showDelayedVideo(session);
+    await startAudioMeter(session.localStream);
 
     dom.joinCallBtn.textContent = 'In call';
     setStatus(inCallStatusMessage(getSavedDelayMs()), 'active');
@@ -178,6 +180,7 @@ export async function onMicChange() {
   try {
     setStatus('Switching microphone…', 'active');
     await session.switchAudio(dom.micSelect.value || undefined);
+    await startAudioMeter(session.localStream);
     syncSelectsFromStream(session.localStream);
     setStatus('Microphone switched.', 'active');
   } catch (err) {
@@ -192,5 +195,6 @@ export function leaveCall() {
     session = null;
   }
   inCall = false;
+  stopAudioMeter();
   resetVideoView();
 }

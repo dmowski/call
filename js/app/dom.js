@@ -20,4 +20,8 @@ export const dom = {
   qualityOptions: $('#quality-options'),
   mirrorToggle: $('#mirror-toggle'),
   fullscreenToggle: $('#fullscreen-toggle'),
+  appThemeToggle: $('#app-theme-toggle'),
+  audioMeter: $('#audio-meter'),
+  audioMeterCanvas: $('#audio-meter-canvas'),
+  audioMeterValue: $('#audio-meter-value'),
 };

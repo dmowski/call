@@ -297,8 +297,22 @@ body {
   display: none !important;
 }
 
+body.app-mode .site-header,
+body.app-mode .site-footer {
+  display: none;
+}
+
 .app-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin-bottom: var(--space-sm);
+}
+
+#app-theme-toggle {
+  font-size: 1rem;
+  line-height: 1;
+  padding: var(--space-xs) var(--space-sm);
 }
 
 .btn-link {
@@ -478,6 +492,41 @@ body {
   height: 100%;
   object-fit: cover;
   display: block;
+}
+
+.audio-meter {
+  --meter-off: var(--surface);
+
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  border-top: 1px solid var(--border);
+}
+
+.audio-meter-canvas {
+  flex: 1;
+  min-width: 0;
+  height: 0.875rem;
+  display: block;
+}
+
+.audio-meter-readout {
+  min-width: 3.75rem;
+  text-align: end;
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+  transition: color 0.15s ease;
+}
+
+#audio-meter-value {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.audio-meter[data-zone='loud'] #audio-meter-value {
+  color: #dc2626;
 }
 
 .settings-bar {

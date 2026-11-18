@@ -6,6 +6,7 @@ import { initDelayControl } from './delay-control.js';
 import { initNoiseCancellationControl } from './noise-cancellation.js';
 import { initVideoQualityControl } from './video-quality.js';
 import { initFullscreenControl } from './fullscreen.js';
+import { initAudioMeter } from './audio-meter.js';
 import { showApp, showLanding } from './navigation.js';
 import { exposeDebugApi, log } from './logger.js';
 
@@ -29,6 +30,7 @@ export function initApp() {
   exposeDebugApi(getSessionDebugState);
 
   dom.themeToggle.addEventListener('click', toggleTheme);
+  dom.appThemeToggle.addEventListener('click', toggleTheme);
   dom.startBtn.addEventListener('click', () => {
     showApp();
     populateDevices();
@@ -42,5 +44,6 @@ export function initApp() {
   initNoiseCancellationControl();
   initVideoQualityControl();
   initFullscreenControl();
+  initAudioMeter();
   restoreSession();
 }
