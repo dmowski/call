@@ -5,6 +5,7 @@ import { joinCall, onCameraChange, onMicChange, getSessionDebugState } from './c
 import { initDelayControl } from './delay-control.js';
 import { initNoiseCancellationControl } from './noise-cancellation.js';
 import { initVideoQualityControl } from './video-quality.js';
+import { initFullscreenControl } from './fullscreen.js';
 import { showApp, showLanding } from './navigation.js';
 import { exposeDebugApi, log } from './logger.js';
 
@@ -40,5 +41,6 @@ export function initApp() {
   initDelayControl();
   initNoiseCancellationControl();
   initVideoQualityControl();
+  initFullscreenControl();
   restoreSession();
 }

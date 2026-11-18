@@ -19,4 +19,5 @@ export const dom = {
   delayOptions: $('#delay-options'),
   qualityOptions: $('#quality-options'),
   mirrorToggle: $('#mirror-toggle'),
+  fullscreenToggle: $('#fullscreen-toggle'),
 };

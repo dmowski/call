@@ -225,8 +225,12 @@
     <!-- App -->
     <section id="app" class="app hidden" aria-label="Call preflight tools">
       <div class="container">
-        <div class="controls">
-          <div class="control-row">
+        <div class="app-topbar">
+          <button type="button" id="back-btn" class="btn-link">← Back to home</button>
+        </div>
+
+        <div class="call-panel">
+          <div class="device-bar">
             <div class="control-group">
               <label for="camera-select">Camera</label>
               <select id="camera-select" aria-label="Select camera">
@@ -239,70 +243,67 @@
                 <option value="">Loading microphones…</option>
               </select>
             </div>
-          </div>
-          <label class="control-toggle">
-            <input type="checkbox" id="noise-cancellation-toggle" checked>
-            <span class="control-toggle-switch" aria-hidden="true"></span>
-            <span class="control-toggle-label">Noise cancellation</span>
-          </label>
-          <div class="control-actions">
             <button type="button" id="join-call-btn" class="btn btn-primary">Join test call</button>
           </div>
-        </div>
 
-        <div class="call-ui">
           <div class="participant-tile" id="participant-tile">
             <div class="video-placeholder" id="video-placeholder">
               <span class="placeholder-icon" aria-hidden="true">📷</span>
               <p>Join test call to preview</p>
             </div>
             <video id="remote-video" class="remote-video hidden" autoplay playsinline muted aria-label="Delayed camera preview"></video>
-            <div class="participant-label" id="participant-label">You (3s delay)</div>
-            <div class="preview-toolbar">
-              <div class="preview-toolbar-inner">
-                <fieldset class="delay-fieldset">
-                  <legend class="visually-hidden">Preview delay</legend>
-                  <div class="delay-options" id="delay-options" role="radiogroup" aria-label="Preview delay">
-                    <label class="delay-option">
-                      <input type="radio" name="delay" value="0">
-                      <span>Off</span>
-                    </label>
-                    <label class="delay-option">
-                      <input type="radio" name="delay" value="3000" checked>
-                      <span>3s</span>
-                    </label>
-                    <label class="delay-option">
-                      <input type="radio" name="delay" value="10000">
-                      <span>10s</span>
-                    </label>
-                    <label class="delay-option">
-                      <input type="radio" name="delay" value="60000">
-                      <span>60s</span>
-                    </label>
-                  </div>
-                </fieldset>
-                <fieldset class="delay-fieldset">
-                  <legend class="visually-hidden">Video quality</legend>
-                  <div class="delay-options" id="quality-options" role="radiogroup" aria-label="Video quality">
-                    <label class="delay-option">
-                      <input type="radio" name="quality" value="sd">
-                      <span>SD</span>
-                    </label>
-                    <label class="delay-option">
-                      <input type="radio" name="quality" value="hd" checked>
-                      <span>HD</span>
-                    </label>
-                  </div>
-                </fieldset>
-                <button type="button" id="mirror-toggle" class="toolbar-toggle" aria-pressed="false">Mirror</button>
-              </div>
-            </div>
           </div>
-          <audio id="remote-audio" autoplay aria-label="Delayed microphone playback"></audio>
-          <p class="status" id="status" role="status" aria-live="polite"></p>
+
+          <div class="settings-bar">
+            <fieldset class="setting">
+              <legend class="setting-label">Delay</legend>
+              <div class="segmented" id="delay-options" role="radiogroup" aria-label="Preview delay">
+                <label class="delay-option">
+                  <input type="radio" name="delay" value="0">
+                  <span>Off</span>
+                </label>
+                <label class="delay-option">
+                  <input type="radio" name="delay" value="3000" checked>
+                  <span>3s</span>
+                </label>
+                <label class="delay-option">
+                  <input type="radio" name="delay" value="10000">
+                  <span>10s</span>
+                </label>
+                <label class="delay-option">
+                  <input type="radio" name="delay" value="60000">
+                  <span>60s</span>
+                </label>
+              </div>
+            </fieldset>
+            <fieldset class="setting">
+              <legend class="setting-label">Quality</legend>
+              <div class="segmented" id="quality-options" role="radiogroup" aria-label="Video quality">
+                <label class="delay-option">
+                  <input type="radio" name="quality" value="sd">
+                  <span>SD</span>
+                </label>
+                <label class="delay-option">
+                  <input type="radio" name="quality" value="hd" checked>
+                  <span>HD</span>
+                </label>
+              </div>
+            </fieldset>
+            <button type="button" id="mirror-toggle" class="toolbar-toggle" aria-pressed="false">Mirror</button>
+            <button type="button" id="fullscreen-toggle" class="toolbar-toggle" aria-pressed="false">Full screen</button>
+            <label class="control-toggle">
+              <input type="checkbox" id="noise-cancellation-toggle" checked>
+              <span class="control-toggle-switch" aria-hidden="true"></span>
+              <span class="control-toggle-label">Noise cancellation</span>
+            </label>
+          </div>
         </div>
 
-        <button type="button" id="back-btn" class="btn btn-ghost">← Back to home</button>
+        <div class="status-row">
+          <p class="status" id="status" role="status" aria-live="polite"></p>
+          <span class="participant-label" id="participant-label">You (3s delay)</span>
+        </div>
+        <audio id="remote-audio" autoplay aria-label="Delayed microphone playback"></audio>
       </div>
     </section>
   </main>

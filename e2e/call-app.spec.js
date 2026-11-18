@@ -120,6 +120,24 @@ test.describe('Join test call', () => {
     expect(saved?.mirrorPreview).toBe(true);
   });
 
+  test('opens preview in full screen and exits', async ({ page }) => {
+    const button = page.getByRole('button', { name: 'Full screen' });
+    await page.getByRole('button', { name: /join test call/i }).click();
+    await expect(page.locator('.delayed-canvas')).toBeVisible({ timeout: 10_000 });
+
+    await button.click();
+    await expect
+      .poll(() => page.evaluate(() => document.fullscreenElement?.id ?? null))
+      .toBe('participant-tile');
+    await expect(page.locator('#fullscreen-toggle')).toHaveAttribute('aria-pressed', 'true');
+
+    await page.evaluate(() => document.exitFullscreen());
+    await expect
+      .poll(() => page.evaluate(() => document.fullscreenElement))
+      .toBeNull();
+    await expect(button).toHaveAttribute('aria-pressed', 'false');
+  });
+
   test('switches video quality between SD and HD', async ({ page }) => {
     const qualityGroup = page.getByRole('radiogroup', { name: /video quality/i });
     await expect(qualityGroup).toBeVisible();
