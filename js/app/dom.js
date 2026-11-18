@@ -17,5 +17,6 @@ export const dom = {
   participantTile: $('#participant-tile'),
   participantLabel: $('#participant-label'),
   delayOptions: $('#delay-options'),
+  qualityOptions: $('#quality-options'),
   mirrorToggle: $('#mirror-toggle'),
 };

@@ -1,6 +1,11 @@
 import { log } from '../app/logger.js';
 import { DELAY_MS } from './constants.js';
-import { audioOnlyConstraint, videoOnlyConstraint } from './constraints.js';
+import {
+  audioOnlyConstraint,
+  DEFAULT_VIDEO_QUALITY,
+  videoOnlyConstraint,
+  videoQualityConstraint,
+} from './constraints.js';
 import { AudioDelayPipeline } from './audio-delay.js';
 import {
   negotiatePeers,
@@ -22,10 +27,18 @@ export class LoopbackSession {
   #onAudioReady;
   #negotiating = false;
   #noiseCancellation = true;
+  #videoQuality = DEFAULT_VIDEO_QUALITY;
 
-  constructor({ delayMs = DELAY_MS, noiseCancellation = true, onVideoReady, onAudioReady } = {}) {
+  constructor({
+    delayMs = DELAY_MS,
+    noiseCancellation = true,
+    videoQuality = DEFAULT_VIDEO_QUALITY,
+    onVideoReady,
+    onAudioReady,
+  } = {}) {
     this.#delayMs = delayMs;
     this.#noiseCancellation = noiseCancellation;
+    this.#videoQuality = videoQuality;
     this.#onVideoReady = onVideoReady;
     this.#onAudioReady = onAudioReady;
     this.#localStream = new MediaStream();
@@ -95,6 +108,8 @@ export class LoopbackSession {
       audioContextState: this.#audioDelay.contextState,
       noiseCancellation: this.#noiseCancellation,
       audioTrackSettings: this.#localStream.getAudioTracks()[0]?.getSettings() ?? null,
+      videoQuality: this.#videoQuality,
+      videoTrackSettings: this.#localStream.getVideoTracks()[0]?.getSettings() ?? null,
     };
   }
 
@@ -116,7 +131,7 @@ export class LoopbackSession {
     if (!this.hasVideo()) return this.#addVideo(deviceId);
 
     const stream = await navigator.mediaDevices.getUserMedia(
-      videoOnlyConstraint(deviceId, { strict: true }),
+      videoOnlyConstraint(deviceId, { strict: true, quality: this.#videoQuality }),
     );
     const [newTrack] = stream.getVideoTracks();
     const sender = this.#pc1.getSenders().find((s) => s.track?.kind === 'video');
@@ -155,7 +170,7 @@ export class LoopbackSession {
 
   async #addVideo(deviceId) {
     const stream = await navigator.mediaDevices.getUserMedia(
-      videoOnlyConstraint(deviceId, { strict: true }),
+      videoOnlyConstraint(deviceId, { strict: true, quality: this.#videoQuality }),
     );
     const [track] = stream.getVideoTracks();
     this.#replaceTrack('video', track);
@@ -237,6 +252,21 @@ export class LoopbackSession {
     });
     log('webrtc', 'noise cancellation updated', {
       enabled,
+      settings: track.getSettings(),
+    });
+  }
+
+  async setVideoQuality(quality) {
+    this.#videoQuality = quality;
+    const track = this.#localStream.getVideoTracks()[0];
+    if (!track) {
+      log('webrtc', 'video quality preference saved (no video track yet)', { quality });
+      return;
+    }
+
+    await track.applyConstraints(videoQualityConstraint(quality));
+    log('webrtc', 'video quality updated', {
+      quality,
       settings: track.getSettings(),
     });
   }

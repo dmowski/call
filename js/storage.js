@@ -1,6 +1,7 @@
 const STORAGE_KEY = 'call-prep-settings';
 
 import { DELAY_MS } from './webrtc/constants.js';
+import { DEFAULT_VIDEO_QUALITY, VIDEO_QUALITY_PRESETS } from './webrtc/constraints.js';
 
 const defaults = {
   theme: null,
@@ -11,6 +12,7 @@ const defaults = {
   delayMs: DELAY_MS,
   mirrorPreview: false,
   noiseCancellation: true,
+  videoQuality: DEFAULT_VIDEO_QUALITY,
 };
 
 export function loadSettings() {
@@ -101,4 +103,13 @@ export function getSavedNoiseCancellation() {
 
 export function saveNoiseCancellation(noiseCancellation) {
   saveSettings({ noiseCancellation });
+}
+
+export function getSavedVideoQuality() {
+  const { videoQuality } = loadSettings();
+  return Object.hasOwn(VIDEO_QUALITY_PRESETS, videoQuality) ? videoQuality : DEFAULT_VIDEO_QUALITY;
+}
+
+export function saveVideoQuality(videoQuality) {
+  saveSettings({ videoQuality });
 }

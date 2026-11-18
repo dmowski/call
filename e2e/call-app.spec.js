@@ -119,6 +119,32 @@ test.describe('Join test call', () => {
     });
     expect(saved?.mirrorPreview).toBe(true);
   });
+
+  test('switches video quality between SD and HD', async ({ page }) => {
+    const qualityGroup = page.getByRole('radiogroup', { name: /video quality/i });
+    await expect(qualityGroup).toBeVisible();
+    await expect(qualityGroup.getByRole('radio', { name: 'HD' })).toBeChecked();
+
+    await page.getByRole('button', { name: /join test call/i }).click();
+    await expect(page.locator('#status')).toContainText(/delayed by 3 seconds/i, { timeout: 10_000 });
+
+    const hdState = await page.evaluate(() => window.__callPrepDebug?.().state);
+    expect(hdState?.videoQuality).toBe('hd');
+    expect(hdState?.videoTrackSettings?.height).toBe(720);
+
+    await page.locator('label.delay-option', { hasText: 'SD' }).click();
+    await expect(page.locator('#status')).toContainText(/video quality set to sd/i);
+
+    const sdState = await page.evaluate(() => window.__callPrepDebug?.().state);
+    expect(sdState?.videoQuality).toBe('sd');
+    expect(sdState?.videoTrackSettings?.height).toBe(360);
+
+    const saved = await page.evaluate(() => {
+      const raw = localStorage.getItem('call-prep-settings');
+      return raw ? JSON.parse(raw) : null;
+    });
+    expect(saved?.videoQuality).toBe('sd');
+  });
 });
 
 test.describe('Device preferences', () => {

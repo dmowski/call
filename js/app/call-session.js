@@ -13,6 +13,7 @@ import {
   getSavedDelayMs,
   getSavedDeviceIds,
   getSavedNoiseCancellation,
+  getSavedVideoQuality,
   setInCall,
 } from '../storage.js';
 import { log } from './logger.js';
@@ -66,6 +67,7 @@ function createSession() {
   session = new LoopbackSession({
     delayMs: getSavedDelayMs(),
     noiseCancellation: getSavedNoiseCancellation(),
+    videoQuality: getSavedVideoQuality(),
     onVideoReady: () => {
       log('video', 'onVideoReady callback');
       if (inCall) showDelayedVideo(session);
@@ -90,6 +92,7 @@ export async function joinCall() {
       videoDeviceId: cameraId || undefined,
       audioDeviceId: micId || undefined,
       noiseCancellation: getSavedNoiseCancellation(),
+      videoQuality: getSavedVideoQuality(),
     });
     log('call', 'getUserMedia succeeded', {
       videoTracks: stream.getVideoTracks().length,
@@ -150,6 +153,17 @@ export async function setNoiseCancellation(enabled) {
       await session.setNoiseCancellation(enabled);
     } catch (err) {
       log('call', 'noise cancellation apply failed', { error: err.message });
+      throw err;
+    }
+  }
+}
+
+export async function setVideoQuality(quality) {
+  if (session) {
+    try {
+      await session.setVideoQuality(quality);
+    } catch (err) {
+      log('call', 'video quality apply failed', { error: err.message });
       throw err;
     }
   }
