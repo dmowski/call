@@ -131,11 +131,22 @@ test.describe('Join test call', () => {
       .toBe('participant-tile');
     await expect(page.locator('#fullscreen-toggle')).toHaveAttribute('aria-pressed', 'true');
 
-    await page.evaluate(() => document.exitFullscreen());
+    await page.locator('.delayed-canvas').click();
     await expect
       .poll(() => page.evaluate(() => document.fullscreenElement))
       .toBeNull();
     await expect(button).toHaveAttribute('aria-pressed', 'false');
+
+    await page.locator('.delayed-canvas').click();
+    await expect
+      .poll(() => page.evaluate(() => document.fullscreenElement?.id ?? null))
+      .toBe('participant-tile');
+  });
+
+  test('clicking placeholder before join does not open full screen', async ({ page }) => {
+    await page.locator('#video-placeholder').click();
+    await page.waitForTimeout(300);
+    expect(await page.evaluate(() => document.fullscreenElement)).toBeNull();
   });
 
   test('switches video quality between SD and HD', async ({ page }) => {

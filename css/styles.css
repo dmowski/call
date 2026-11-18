@@ -585,6 +585,10 @@ body {
   outline-offset: 2px;
 }
 
+.participant-tile:has(.delayed-canvas:not(.hidden)) {
+  cursor: zoom-in;
+}
+
 .participant-tile:fullscreen {
   aspect-ratio: auto;
   width: 100%;

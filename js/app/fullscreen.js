@@ -30,6 +30,9 @@ export function initFullscreenControl() {
   }
 
   dom.fullscreenToggle.addEventListener('click', toggleFullscreen);
-  dom.participantTile.addEventListener('dblclick', toggleFullscreen);
+  dom.participantTile.addEventListener('click', () => {
+    if (!dom.videoPlaceholder.classList.contains('hidden')) return;
+    toggleFullscreen();
+  });
   document.addEventListener('fullscreenchange', syncButton);
 }
